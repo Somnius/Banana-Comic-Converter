@@ -144,13 +144,24 @@
   dialog{border:1px solid var(--line);border-radius:18px;padding:14px;width:min(1560px,98vw);max-height:96vh;overflow:auto;background:var(--bg);color:var(--fg);box-shadow:var(--shadow)}
   dialog[open]{display:flex;flex-direction:column;height:min(96vh,1100px)}
   dialog::backdrop{background:rgba(30,22,0,.5)}
-  .edTop{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:10px}
-  .edTop .grow{flex:1}
-  .edTop select{max-width:100%}
-  .edNav{display:inline-flex;gap:6px;align-items:center}
-  .edNav .btn2{margin:0}
-  #edPage{width:5em;padding:6px 8px}
-  #edTags{display:inline-flex;flex-wrap:wrap;gap:5px}
+  .edHead{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .edHead h3{margin:0}.edHead .grow{flex:1}
+  .edSide .btn2.sm{width:auto;padding:5px 10px;font-size:.82rem}
+  .edNav{display:flex;gap:6px;align-items:center}
+  .edNav .btn2{margin:0;flex:1 1 0;white-space:nowrap}
+  .edNav small{margin:0!important;white-space:nowrap}
+  #edPage{width:4.6em;padding:6px 8px;flex:0 0 auto}
+  #edTags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}#edTags:empty{display:none}
+  .edProg{margin-top:8px}
+  .edBar{height:7px;border-radius:99px;background:var(--field);border:1px solid var(--line);overflow:hidden}
+  .edBar i{display:block;height:100%;width:0;background:var(--acc);transition:width .25s}
+  .edSide .edProg small{margin-top:4px}
+  .edRow2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+  .edSide kbd{font-size:.72em;margin-left:2px;opacity:.85}
+  .zseg{display:flex;width:100%}.zseg label{flex:1}.zseg span{display:block;text-align:center;padding-left:4px;padding-right:4px;white-space:nowrap}
+  .zseg input:disabled+span{opacity:.5}
+  .edTools.t3{grid-template-columns:repeat(3,1fr);margin-top:8px}
+  .edDet{margin-top:10px}.edDet summary{cursor:pointer;font-size:.85rem;font-weight:600;color:var(--head)}
   .tag{display:inline-block;padding:2px 10px;border-radius:99px;background:#f0b90f;color:#3a2d00;font-size:.78rem;font-weight:700}
   .tag.ok{background:var(--card);color:var(--mut);font-weight:500;border:1px solid var(--line)}
   .edShell{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-rows:minmax(0,1fr);gap:14px;flex:1;min-height:0}
@@ -178,9 +189,9 @@
   .chip.seen{opacity:.55}
   @media (max-width:899px){
     dialog[open]{display:block;height:auto}
-    .edShell{display:block}
-    .edWrap{height:62vh;flex:none}
-    .edSide{margin-top:12px;overflow:visible}
+    .edShell{display:flex;flex-direction:column;gap:12px}
+    .edMain{order:0}.edSide{display:contents}.edSide>section{order:2}.edSide>.edNavCard{order:-1}
+    .edWrap{height:56vh;flex:none}
   }
   .edSide label.inl2{display:block;margin:8px 0 6px;font-size:.85rem}
   #edCountRow input{width:4.5em;padding:6px 8px}
@@ -427,19 +438,28 @@
       <li><b>Re-detect</b> throws away your edits on this page. <b>Black gutters</b> re-detects this page treating black gaps as the gutters.</li>
       <li><b>Undo</b> steps back through your changes on this page (history clears when you change page).</li>
     </ul>
+    <h2>Zoom for one box</h2>
+    <p>Select a box, then under <b>Selected box</b> choose how it is shown:</p>
+    <ul>
+      <li><b>Auto</b> (default) follows your long-panel split and dense page zoom settings.</li>
+      <li><b>Off</b> shows the box as it is, with no zoom, even if a zoom setting would normally cut it.</li>
+      <li><b>Halves</b> or <b>Thirds</b> show the box whole, then enlarged overlapping parts in reading order. The cut that enlarges the parts most is used (top-to-bottom bands or left-to-right columns), snapped to blank gaps where there are any, with the overlap from your zoom settings. A box with halves or thirds is never packed onto a screen with other boxes.</li>
+    </ul>
+    <p>A small purple tag on the box shows its zoom choice, and the screen preview shows the parts. Zoom choices are kept when you move or resize the box.</p>
     <h2>Box shape lock</h2>
     <p>Choose <i>Landscape screen shape</i> or <i>Portrait screen shape</i> to draw and resize boxes with exactly your device's proportions, so they fill the screen with no side bars. <i>Keep the selected box's shape</i> resizes without changing proportions. While locked only the corner handles are used.</p>
     <h2>Pages to check</h2>
     <p>Instead of going through every page, let the editor point out pages worth a look. A background scan starts when you open a file (you can stop it and resume it, or rescan).</p>
     <ul>
-      <li><b>Filter by problem flags</b> (default). Under <i>Flag pages with</i>, <b>Several panels in one box</b> (shown as <i>Grouped?</i>: near-black borders run along most of a box) and <b>A very big box next to other boxes</b> (<i>Big</i>) are on. Optional, off by default: <b>Very tall or very wide boxes</b>, <b>Many boxes</b> (<i>Busy</i>) and <b>Overlapping boxes</b>. <b>Sensitivity</b> (Low, Normal, High) controls how many pages get flagged. A single full-page box is not called Big, so splash pages are left alone.</li>
+      <li><b>Filter by problem flags</b> (default). Under <i>Flag pages with</i>, <b>Several panels in one box</b> (shown as <i>Grouped?</i>: near-black borders run along most of a box) and <b>A very big box next to other boxes</b> (<i>Big</i>) are on. <b>Overlapping boxes</b> (<i>Overlap</i>) is also on. Optional, off by default: <b>Very tall or very wide boxes</b> and <b>Many boxes</b> (<i>Busy</i>). <b>Sensitivity</b> (Low, Normal, High) controls how many pages get flagged. A single full-page box is not called Big, so splash pages are left alone.</li>
       <li><b>Filter by number of panels:</b> show only pages with a panel count in a range (for example 1&ndash;2), or tap a count button to see exactly those pages.</li>
       <li><b>Step through flagged pages only</b> makes Prev / Next jump between matching pages. The chips list them; ones you have already looked at are dimmed. Turn it off to go through every page.</li>
     </ul>
     <h2>Keyboard</h2>
     <ul>
-      <li><kbd>Arrows</kbd> nudge the selected box (<kbd>Shift</kbd> = bigger steps); with nothing selected, left / right change page.</li>
-      <li><kbd>Delete</kbd> removes the box. <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes. <kbd>N</kbd> / <kbd>P</kbd> next / previous page. <kbd>D</kbd> toggles drawing.</li>
+      <li><kbd>&larr;</kbd> / <kbd>&rarr;</kbd> go to the previous / next page (<kbd>PageUp</kbd> / <kbd>PageDown</kbd> and <kbd>P</kbd> / <kbd>N</kbd> work too). <kbd>&uarr;</kbd> / <kbd>&darr;</kbd> or <kbd>1</kbd>&ndash;<kbd>9</kbd> pick a box.</li>
+      <li><kbd>H</kbd> halves, <kbd>T</kbd> thirds, <kbd>O</kbd> no zoom, <kbd>A</kbd> auto for the selected box. <kbd>D</kbd> draw, <kbd>Delete</kbd> remove, <kbd>[</kbd> / <kbd>]</kbd> earlier / later, <kbd>W</kbd> whole page, <kbd>R</kbd> re-detect, <kbd>S</kbd> sort, <kbd>F</kbd> flagged pages only, <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo.</li>
+      <li><kbd>Shift</kbd> + arrows nudge the selected box; add <kbd>Ctrl</kbd> for bigger steps.</li>
     </ul>
     <h2>Good to know</h2>
     <ul>
@@ -488,14 +508,6 @@
 </dialog>
 
 <dialog id="edDlg">
-  <div class="edTop">
-    <select id="edFile" hidden></select>
-    <span class="edNav"><button type="button" class="btn2" id="edPrev">Prev</button> <input type="number" id="edPage" min="1" value="1"> <small id="edOf"></small> <button type="button" class="btn2" id="edNext">Next</button></span>
-    <span id="edTags"></span>
-    <span class="grow"></span>
-    <button type="button" class="btn2" id="edHelp" data-help="editor">Help</button>
-    <button type="button" class="btn2" id="edClose">Done</button>
-  </div>
   <div class="edShell">
     <div class="edMain">
       <small id="edStatus"></small>
@@ -503,20 +515,52 @@
       <small id="edInfo"></small>
     </div>
     <aside class="edSide">
+      <section class="edNavCard">
+        <div class="edHead"><h3>Page</h3><select id="edFile" hidden></select><span class="grow"></span>
+          <button type="button" class="btn2 sm" id="edHelp" data-help="editor">Help</button>
+          <button type="button" class="btn2 sm" id="edClose" title="Close the editor (Esc)">Done <kbd>Esc</kbd></button></div>
+        <div class="edNav">
+          <button type="button" class="btn2" id="edPrev"><span class="lbl">Prev</span> <kbd>&larr;</kbd></button>
+          <input type="number" id="edPage" min="1" value="1" aria-label="Page number"><small id="edOf"></small>
+          <button type="button" class="btn2" id="edNext"><span class="lbl">Next</span> <kbd>&rarr;</kbd></button>
+        </div>
+        <div class="edProg"><div class="edBar"><i id="edBarFill"></i></div><small id="edProgTxt"></small></div>
+        <div id="edTags"></div>
+        <div class="edRow2">
+          <button type="button" class="btn2" id="edFlagOnly" aria-pressed="false"><span class="lbl">Flagged only</span> <kbd>F</kbd></button>
+          <button type="button" class="btn2" id="edScanBtn"><span class="lbl">Scan pages</span></button>
+        </div>
+        <small id="edScanMsg"></small>
+      </section>
+      <section>
+        <h3>Selected box</h3>
+        <div class="seg zseg" role="radiogroup" aria-label="Zoom for the selected box">
+          <label><input type="radio" name="edz" value="" checked><span>Auto <kbd>A</kbd></span></label><label><input type="radio" name="edz" value="n"><span>Off <kbd>O</kbd></span></label><label><input type="radio" name="edz" value="2"><span>Halves <kbd>H</kbd></span></label><label><input type="radio" name="edz" value="3"><span>Thirds <kbd>T</kbd></span></label>
+        </div>
+        <small id="edZoomNote"></small>
+        <div class="edTools t3">
+          <button type="button" class="btn2" id="edDel">Delete <kbd>Del</kbd></button>
+          <button type="button" class="btn2" id="edUp">Earlier <kbd>[</kbd></button>
+          <button type="button" class="btn2" id="edDown">Later <kbd>]</kbd></button>
+        </div>
+      </section>
       <section>
         <h3>Edit boxes</h3>
         <div class="edTools">
-          <button type="button" class="btn2" id="edDraw">Draw box</button>
-          <button type="button" class="btn2" id="edDel">Delete box</button>
-          <button type="button" class="btn2" id="edUp">Earlier</button>
-          <button type="button" class="btn2" id="edDown">Later</button>
-          <button type="button" class="btn2" id="edWhole">Whole page</button>
-          <button type="button" class="btn2" id="edReset">Re-detect</button>
-          <button type="button" class="btn2" id="edSort" title="Put the boxes in reading order again">Sort by reading order</button>
+          <button type="button" class="btn2" id="edDraw"><span class="lbl">Draw box</span> <kbd>D</kbd></button>
+          <button type="button" class="btn2" id="edUndo">Undo <kbd>Ctrl Z</kbd></button>
+          <button type="button" class="btn2" id="edWhole">Whole page <kbd>W</kbd></button>
+          <button type="button" class="btn2" id="edReset">Re-detect <kbd>R</kbd></button>
+          <button type="button" class="btn2" id="edSort" title="Put the boxes in reading order again">Sort order <kbd>S</kbd></button>
           <button type="button" class="btn2" id="edDark" title="Detect panels again treating black gaps as the gutters">Black gutters</button>
-          <button type="button" class="btn2" id="edUndo">Undo</button>
         </div>
-        <small>Click a box to select it. Drag it to move it, or drag its handles to resize it.</small>
+        <small>Click a box (or press its number) to select it. Drag it to move it, or drag its handles to resize it.</small>
+      </section>
+      <section>
+        <h3>Screen preview</h3>
+        <label class="inl2"><input type="checkbox" id="edShow" checked> Show how these boxes become screens</label>
+        <label class="inl2">Preview as <select id="edView"><option value="land">Landscape screen</option><option value="port">Portrait screen</option><option value="mix">Mixed orientation (auto)</option></select></label>
+        <small id="edPlanInfo"></small>
       </section>
       <section>
         <h3>Box shape lock</h3>
@@ -529,38 +573,27 @@
         <small id="edLockNote"></small>
       </section>
       <section>
-        <h3>Screen preview</h3>
-        <label class="inl2"><input type="checkbox" id="edShow" checked> Show how these boxes become screens</label>
-        <label class="inl2">Preview as <select id="edView"><option value="land">Landscape screen</option><option value="port">Portrait screen</option><option value="mix">Mixed orientation (auto)</option></select></label>
-        <small id="edPlanInfo"></small>
-        <small>Uses your current settings (long-panel split, dense page zoom, max panels per screen, reading direction). Grouping of small boxes is estimated within this page only.</small>
-      </section>
-      <section>
         <h3>Pages to check</h3>
-        <small>Flags pages with tall, big or possibly grouped boxes, so you only need to look at those.</small>
-        <div class="edRow">
-          <button type="button" class="btn2" id="edScanBtn">Scan pages</button>
-          <label class="inl" id="edSensLbl">Sensitivity <select id="edSens"><option value="low">Low (fewer)</option><option value="normal" selected>Normal</option><option value="high">High (more)</option></select></label>
-        </div>
-        <label class="inl2">Filter pages by <select id="edMode"><option value="flags" selected>Problem flags (tall, big, grouped)</option><option value="count">Number of panels on the page</option></select></label>
-        <div id="edCountRow" hidden>
-          <div class="edRow">Show pages with <input type="number" id="edMin" min="0" value="1"> to <input type="number" id="edMax" min="0" value="2"> panels</div>
-          <small>Tap a count to see only pages with exactly that many panels.</small>
-          <div class="chips" id="edCounts"></div>
-        </div>
-        <div id="edKinds" class="kinds"><small>Flag pages with:</small>
-          <label class="chk"><input type="checkbox" id="edKGroup" checked><span>Several panels in one box (borders inside it)</span></label>
-          <label class="chk"><input type="checkbox" id="edKBig" checked><span>A very big box next to other boxes</span></label>
-          <label class="chk"><input type="checkbox" id="edKTall"><span>Very tall or very wide boxes</span></label>
-          <label class="chk"><input type="checkbox" id="edKBusy"><span>Many boxes</span></label>
-          <label class="chk"><input type="checkbox" id="edKOv"><span>Overlapping boxes</span></label>
-        </div>
-        <button type="button" class="btn2" id="edFlagOnly" aria-pressed="false">Step through flagged pages only</button>
-        <small id="edScanMsg"></small>
         <div class="chips" id="edChips"></div>
+        <details class="edDet"><summary>Flag settings</summary>
+          <label class="inl2" id="edSensLbl">Sensitivity <select id="edSens"><option value="low">Low (fewer)</option><option value="normal" selected>Normal</option><option value="high">High (more)</option></select></label>
+          <label class="inl2">Filter pages by <select id="edMode"><option value="flags" selected>Problem flags (tall, big, grouped)</option><option value="count">Number of panels on the page</option></select></label>
+          <div id="edCountRow" hidden>
+            <div class="edRow">Show pages with <input type="number" id="edMin" min="0" value="1"> to <input type="number" id="edMax" min="0" value="2"> panels</div>
+            <small>Tap a count to see only pages with exactly that many panels.</small>
+            <div class="chips" id="edCounts"></div>
+          </div>
+          <div id="edKinds" class="kinds"><small>Flag pages with:</small>
+            <label class="chk"><input type="checkbox" id="edKGroup" checked><span>Several panels in one box (borders inside it)</span></label>
+            <label class="chk"><input type="checkbox" id="edKBig" checked><span>A very big box next to other boxes</span></label>
+            <label class="chk"><input type="checkbox" id="edKOv" checked><span>Overlapping boxes</span></label>
+            <label class="chk"><input type="checkbox" id="edKTall"><span>Very tall or very wide boxes</span></label>
+            <label class="chk"><input type="checkbox" id="edKBusy"><span>Many boxes</span></label>
+          </div>
+        </details>
       </section>
       <section>
-        <small><b>Keys:</b> arrows nudge the selected box (Shift = bigger steps), Delete removes it, Ctrl+Z undoes, N / P go to the next / previous page, D toggles drawing. Boxes are shown on the page as it is read, before any cropping or scaling. Delete every box to skip a page.</small>
+        <small><b>Keys:</b> <kbd>&larr;</kbd> <kbd>&rarr;</kbd> previous / next page &middot; <kbd>&uarr;</kbd> <kbd>&darr;</kbd> or <kbd>1</kbd>-<kbd>9</kbd> pick a box &middot; <kbd>Shift</kbd>+arrows nudge the box (add <kbd>Ctrl</kbd> for bigger steps) &middot; <kbd>H</kbd> halves, <kbd>T</kbd> thirds, <kbd>O</kbd> no zoom, <kbd>A</kbd> auto &middot; <kbd>D</kbd> draw, <kbd>Del</kbd> delete, <kbd>[</kbd> <kbd>]</kbd> reorder, <kbd>W</kbd> whole page, <kbd>R</kbd> re-detect, <kbd>S</kbd> sort, <kbd>F</kbd> flagged only, <kbd>Ctrl</kbd>+<kbd>Z</kbd> undo. Delete every box to skip a page.</small>
       </section>
     </aside>
   </div>
@@ -1004,6 +1037,36 @@ function panelsFor(g, W, H, rtl, force){
   }
   return panelsLight(g, W, H, rtl, false);
 }
+// Boxes that overlap only along a thin strip (a panel bleeding into its neighbour) are cut apart at the quietest line in that strip.
+function separateOverlaps(g, W, boxes){
+  const b = boxes.map(x => x.slice());
+  for(let pass = 0; pass < 2; pass++) for(let i = 0; i < b.length; i++) for(let j = i + 1; j < b.length; j++){
+    const a = b[i], c = b[j];
+    const x0 = Math.max(a[0], c[0]), x1 = Math.min(a[2], c[2]), y0 = Math.max(a[1], c[1]), y1 = Math.min(a[3], c[3]);
+    const iw = x1 - x0, ih = y1 - y0; if(iw <= 0 || ih <= 0) continue;
+    const wa = a[2] - a[0], wc = c[2] - c[0], ha = a[3] - a[1], hc = c[3] - c[1];
+    if(ih >= 0.8 * Math.min(ha, hc) && iw <= 0.5 * Math.min(wa, wc)){
+      let best = -1, bi = 1e9;
+      for(let x = x0; x <= x1; x++){
+        let ink = 0; for(let y = y0; y < y1; y++) if(g[y * W + x] < CFG.WHITE) ink++;
+        ink += Math.abs(x - (x0 + x1) / 2) * 0.01;
+        if(ink < bi){ bi = ink; best = x; }
+      }
+      const L = a[0] <= c[0] ? a : c, R = L === a ? c : a;
+      if(best - L[0] >= CFG.MIN_SIDE && R[2] - best >= CFG.MIN_SIDE){ L[2] = best; R[0] = best; }
+    }else if(iw >= 0.8 * Math.min(wa, wc) && ih <= 0.5 * Math.min(ha, hc)){
+      let best = -1, bi = 1e9;
+      for(let y = y0; y <= y1; y++){
+        let ink = 0; for(let x = x0; x < x1; x++) if(g[y * W + x] < CFG.WHITE) ink++;
+        ink += Math.abs(y - (y0 + y1) / 2) * 0.01;
+        if(ink < bi){ bi = ink; best = y; }
+      }
+      const T = a[1] <= c[1] ? a : c, B = T === a ? c : a;
+      if(best - T[1] >= CFG.MIN_SIDE && B[3] - best >= CFG.MIN_SIDE){ T[3] = best; B[1] = best; }
+    }
+  }
+  return b;
+}
 function panelsLight(g, W, H, rtl, inverted){
   let sum = 0, ink = 0;
   for(let i = 0; i < g.length; i++){ sum += g[i]; if(g[i] < CFG.WHITE) ink++; }
@@ -1023,7 +1086,8 @@ function panelsLight(g, W, H, rtl, inverted){
     if(h / w > 3.5 && w < 100) continue;
     keep.push(b);
   }
-  return keep.length ? orderBoxes(keep, rtl, Math.max(4, Math.round(0.012 * Math.max(W, H)))) : [[0, 0, W, H]];
+  const sep = keep.length > 1 ? separateOverlaps(g, W, keep) : keep;
+  return sep.length ? orderBoxes(sep, rtl, Math.max(4, Math.round(0.012 * Math.max(W, H)))) : [[0, 0, W, H]];
 }
 
 /* ---------- packing / rendering ---------- */
@@ -1228,7 +1292,21 @@ function cropUnit(u, x0, y0, x1, y1){
 }
 // Pure geometry: the enlarged parts (as [x0,y0,x1,y1] inside the panel) that follow a panel shown alone. Empty when it stays whole.
 // Used both for conversion and for the panel editor's screen preview, so the two always agree.
+function zoomParts(mode, u, n){
+  const rowInk = new Uint32Array(u.h), colInk = new Uint32Array(u.w);
+  for(let y = 0; y < u.h; y++) for(let x = 0; x < u.w; x++) if(u.g[y * u.w + x] < CFG.WHITE){ rowInk[y]++; colInk[x]++; }
+  const ys = spansFor(rowInk, u.h, n, CFG.GAP_INK * u.w, mode.splitOv), xs = spansFor(colInk, u.w, n, CFG.GAP_INK * u.h, mode.splitOv);
+  const bands = ys.map(([a, b]) => [0, a, u.w, b]), cols = xs.map(([a, b]) => [a, 0, b, u.h]);
+  const sc = ps => Math.min(...ps.map(r => soloScale({w: r[2] - r[0], h: r[3] - r[1]}, mode.W, mode.H)));
+  const sb = sc(bands), sk = sc(cols);
+  const useBands = Math.abs(sb - sk) < 0.02 * Math.max(sb, sk) ? mode.land : sb > sk;   // the cut that enlarges most; on a tie, fill the screen's long side
+  if(useBands) return bands;
+  if(mode.rtl) cols.reverse();
+  return cols;
+}
 function soloParts(mode, u){
+  if(u.zoom === 'n') return [];
+  if(u.zoom === 2 || u.zoom === 3) return zoomParts(mode, u, u.zoom);
   const plan = zoomPlan(mode, u);
   if(plan){
     const rowInk = new Uint32Array(u.h), colInk = new Uint32Array(u.w);
@@ -1691,7 +1769,7 @@ async function convertFile(file, idx, total, S){
     for(const b of boxes){
       const w = b[2] - b[0], h = b[3] - b[1], cg = new Uint8Array(w * h);
       for(let y = 0; y < h; y++) cg.set(g.subarray((b[1] + y) * W + b[0], (b[1] + y) * W + b[0] + w), y * w);
-      const u = {g: cg, w, h, chap: curIdx, solo: boxes.length === 1};
+      const u = {g: cg, w, h, chap: curIdx, solo: boxes.length === 1 || b[4] === 2 || b[4] === 3, zoom: b[4]};
       totalPanels++;
       for(const m of modes) if(!coverModes.includes(m)) m.queue.push(m.mixed ? {...u, o: (u.w / u.h >= m.mixAsp) ? 'land' : 'port'} : u);
     }
@@ -1898,9 +1976,9 @@ function edCountText(){ const n = edits.size; $('edCount').textContent = n ? `${
 
 /* --- flagging: which pages deserve a manual look --- */
 const SENS = {
-  low:    {tall: 3.4, big: 0.70, grp: 0.30, busy: 14, ov: 0.40},
-  normal: {tall: 2.8, big: 0.55, grp: 0.20, busy: 10, ov: 0.25},
-  high:   {tall: 2.2, big: 0.42, grp: 0.10, busy: 8,  ov: 0.15}
+  low:    {tall: 3.4, big: 0.70, grp: 0.45, busy: 14, ov: 0.40},
+  normal: {tall: 2.8, big: 0.55, grp: 0.32, busy: 10, ov: 0.25},
+  high:   {tall: 2.2, big: 0.42, grp: 0.18, busy: 8,  ov: 0.15}
 };
 // Which kinds of flag are active. By default only the two that point at a merged or oversized box.
 const edKinds = () => ({group: $('edKGroup').checked, big: $('edKBig').checked, tall: $('edKTall').checked, busy: $('edKBusy').checked, ov: $('edKOv').checked});
@@ -1960,7 +2038,7 @@ function edFlagUI(){
   if(!ed.file || !ed.src) return;
   const sc = edScanOf(ed.file, ed.src), list = edFlagList();
   const unseen = list.filter(x => !edSeen.has(edKey(ed.file, x.i))).length;
-  $('edScanBtn').textContent = sc.running ? 'Stop scan' : (sc.m.size >= sc.total && sc.total ? 'Scan again' : (sc.m.size ? 'Resume scan' : 'Scan pages'));
+  edLbl('edScanBtn', sc.running ? 'Stop scan' : (sc.m.size >= sc.total && sc.total ? 'Scan again' : (sc.m.size ? 'Resume scan' : 'Scan pages')));
   $('edScanMsg').textContent = (sc.running ? `Scanning ${sc.m.size} / ${sc.total}... ` : (sc.m.size >= sc.total ? 'Scan complete. ' : `Scanned ${sc.m.size} / ${sc.total}. `))
     + (list.length ? `${list.length} ${edByCount() ? 'matching' : 'flagged'}, ${unseen} not looked at yet.` : (sc.m.size ? (edByCount() ? 'No pages match that panel count.' : 'No pages flagged. Try a higher sensitivity.') : ''));
   $('edSensLbl').hidden = edByCount(); $('edKinds').hidden = edByCount(); $('edCountRow').hidden = !edByCount();
@@ -1971,8 +2049,11 @@ function edFlagUI(){
     b.textContent = `${n} panel${n === 1 ? '' : 's'}: ${hist.get(n)} page${hist.get(n) === 1 ? '' : 's'}`;
     b.addEventListener('click', () => { $('edMin').value = n; $('edMax').value = n; edFlagUI(); }); cb.append(b);
   }
+  { const done = list.length - unseen, viewed = [...edSeen].filter(k => k.startsWith(edFileKey(ed.file) + '#')).length, kind = edByCount() ? 'Matching' : 'Flagged';
+    $('edProgTxt').textContent = (list.length ? `${kind} ${list.length} \u00b7 reviewed ${done} \u00b7 left ${unseen}` : (sc.m.size ? `No ${kind.toLowerCase()} pages` : 'Scan to find pages to check')) + ` \u00b7 viewed ${viewed} of ${ed.src.count} pages`;
+    $('edBarFill').style.width = (list.length ? done / list.length : viewed / Math.max(1, ed.src.count)) * 100 + '%'; }
   $('edFlagOnly').classList.toggle('on', ed.flagOnly); $('edFlagOnly').setAttribute('aria-pressed', ed.flagOnly);
-  $('edPrev').textContent = ed.flagOnly ? 'Prev flagged' : 'Prev'; $('edNext').textContent = ed.flagOnly ? 'Next flagged' : 'Next';
+  edLbl('edPrev', ed.flagOnly ? 'Prev flagged' : 'Prev'); edLbl('edNext', ed.flagOnly ? 'Next flagged' : 'Next');
   const box = $('edChips'); box.textContent = '';
   for(const x of list){
     const b = document.createElement('button'); b.type = 'button'; b.className = 'chip' + (x.i === ed.page ? ' cur' : '') + (edSeen.has(edKey(ed.file, x.i)) && x.i !== ed.page ? ' seen' : '');
@@ -2031,7 +2112,7 @@ function edPlanUpdate(){
   }
   const asp = Math.min(3, Math.max(0.6, parseFloat($('mixAsp').value) || 1.15));
   const us = ed.boxes.map((b, i) => {
-    const u = {...edCropUnit(ed.g, ed.W, b), solo: n === 1, idx: i, b};
+    const u = {...edCropUnit(ed.g, ed.W, b), solo: n === 1 || b[4] === 2 || b[4] === 3, zoom: b[4], idx: i, b};
     u.o = mix ? (u.w / u.h >= asp ? 'land' : 'port') : (land ? 'land' : 'port'); return u;
   });
   const q = us.slice(), screens = [];
@@ -2104,6 +2185,8 @@ function lockRect(ax, ay, px, py, r){
 }
 
 /* --- drawing --- */
+const edZKeep = (nb, b) => { if(b && b[4] !== undefined) nb[4] = b[4]; return nb; };
+const edLbl = (id, t) => { const l = $(id).querySelector('.lbl'); if(l) l.textContent = t; else $(id).textContent = t; };
 const edPx = n => n * ed.W / Math.max(1, $('edCv').getBoundingClientRect().width);
 const edMin = () => Math.max(20, Math.round(Math.min(ed.W, ed.H) * 0.03));
 const edHKeys = () => (edLockRatio() ? ['nw', 'ne', 'se', 'sw'] : ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w']);
@@ -2136,7 +2219,14 @@ function edRender(){
     ctx.fillStyle = '#fff'; ctx.font = `bold ${fs}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(String(i + 1), b[0] + r + lw, b[1] + r + lw + 1);
   });
+  ed.boxes.forEach((b, i) => {
+    if(b[4] === undefined) return;
+    const txt = b[4] === 'n' ? 'no zoom' : (b[4] === 2 ? 'halves' : 'thirds'), f2 = Math.round(fs * 0.7);
+    ctx.font = `bold ${f2}px sans-serif`; const w = ctx.measureText(txt).width + f2 * 0.8, h = f2 * 1.4, x = b[2] - w - lw, y = b[1] + lw;
+    ctx.fillStyle = b[4] === 'n' ? '#475569' : '#7c3aed'; ctx.fillRect(x, y, w, h); ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x + f2 * 0.4, y + h / 2 + 1);
+  });
   edDrawPlan(ctx, lw, fs);
+  edZoomSync();
   if(ed.sel >= 0 && ed.boxes[ed.sel] && !ed.draw){
     const hs = edPx(6), b = ed.boxes[ed.sel];
     ctx.lineWidth = Math.max(1, edPx(1.5)); ctx.strokeStyle = '#7a4d00'; ctx.fillStyle = '#fff';
@@ -2156,6 +2246,18 @@ function edRender(){
   }else $('edInfo').textContent = $('edLock').value === 'free' ? 'Tip: lock the box shape to your screen so drawn boxes fill it exactly.' : '';
   cv.style.touchAction = (ed.draw || ed.sel >= 0) ? 'none' : 'pan-y pinch-zoom';
 }
+function edZoomSync(){
+  const b = ed.sel >= 0 ? ed.boxes[ed.sel] : null, v = b && b[4] !== undefined ? String(b[4]) : '';
+  document.querySelectorAll('input[name=edz]').forEach(r => { r.disabled = !b; r.checked = b ? r.value === v : r.value === ''; });
+  $('edZoomNote').textContent = b ? (v === '' ? `Box ${ed.sel + 1}: Auto follows your long-panel and dense-zoom settings.` : v === 'n' ? `Box ${ed.sel + 1}: shown as it is, with no zoom, whatever your zoom settings say.` : `Box ${ed.sel + 1}: shown whole, then ${v === '2' ? 'two' : 'three'} enlarged overlapping parts.`) : 'Select a box to choose how it is zoomed: Auto, Off, overlapping halves or overlapping thirds.';
+}
+function edSetZoom(v){
+  if(ed.sel < 0 || !ed.boxes[ed.sel]) return;
+  const nv = v === '' ? undefined : (v === 'n' ? 'n' : parseInt(v, 10)), cur = ed.boxes[ed.sel][4];
+  if(nv === cur) return;
+  edDo(() => { const b = ed.boxes[ed.sel].slice(0, 4); if(nv !== undefined) b[4] = nv; ed.boxes[ed.sel] = b; });
+}
+document.querySelectorAll('input[name=edz]').forEach(r => r.addEventListener('change', () => { if(r.checked) edSetZoom(r.value); }));
 function edFit(){
   const cv = $('edCv'), wrap = cv.parentElement; if(!ed.W) return;
   const aw = wrap.clientWidth - 2, ah = wrap.clientHeight - 2; if(aw <= 0 || ah <= 0) return;
@@ -2256,10 +2358,10 @@ edCv.addEventListener('pointermove', e => {
     const b0 = a.b0;
     const dx = Math.max(-b0[0], Math.min(ed.W - b0[2], p.x - a.p0.x)), dy = Math.max(-b0[1], Math.min(ed.H - b0[3], p.y - a.p0.y));
     if(!a.moved && Math.hypot(dx, dy) < edPx(4)) return;
-    a.moved = true; ed.boxes[ed.sel] = [b0[0] + dx, b0[1] + dy, b0[2] + dx, b0[3] + dy].map(Math.round); edRender();
+    a.moved = true; ed.boxes[ed.sel] = edZKeep([b0[0] + dx, b0[1] + dy, b0[2] + dx, b0[3] + dy].map(Math.round), b0); edRender();
   }else if(a.t === 'size'){
     const nb = edResize(a.b0, a.k, p, a.r);
-    if(nb){ a.moved = true; ed.boxes[ed.sel] = nb; edRender(); }
+    if(nb){ a.moved = true; ed.boxes[ed.sel] = edZKeep(nb, a.b0); edRender(); }
   }
 });
 const edUp = () => {
@@ -2275,7 +2377,7 @@ edCv.addEventListener('pointerup', edUp);
 edCv.addEventListener('pointercancel', edUp);
 function edSetDraw(on){
   ed.draw = on; $('edDraw').classList.toggle('on', on);
-  $('edDraw').textContent = on ? 'Drawing: drag on page' : 'Draw box';
+  edLbl('edDraw', on ? 'Drawing: drag' : 'Draw box');
   edCv.style.cursor = on ? 'crosshair' : 'default'; edRender();
 }
 $('edDraw').addEventListener('click', () => edSetDraw(!ed.draw));
@@ -2289,7 +2391,8 @@ $('edSort').addEventListener('click', () => { if(ed.pageCv && ed.boxes.length > 
 $('edDark').addEventListener('click', () => { if(ed.pageCv) edDo(() => { ed.boxes = panelsFor(ed.g, ed.W, ed.H, edRtl(), 'dark'); ed.sel = -1; }); });
 $('edPrev').addEventListener('click', () => edStep(-1));
 $('edNext').addEventListener('click', () => edStep(1));
-$('edPage').addEventListener('change', () => { if(ed.src) edLoadPage((parseInt($('edPage').value, 10) || 1) - 1); });
+$('edPage').addEventListener('change', () => { if(ed.src) edLoadPage((parseInt($('edPage').value, 10) || 1) - 1); $('edPage').blur(); });
+$('edPage').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); $('edPage').dispatchEvent(new Event('change')); } });
 $('edFile').addEventListener('change', () => { ed.jumped = false; edLoadFile(parseInt($('edFile').value, 10) || 0); });
 $('edClose').addEventListener('click', () => $('edDlg').close());
 $('edLock').addEventListener('change', () => { edLockLabels(); edRender(); });
@@ -2308,25 +2411,44 @@ $('preset').addEventListener('change', edLockLabels);
 $('edDlg').addEventListener('close', () => { for(const sc of edScans.values()) sc.stop = true; });
 new ResizeObserver(() => { edFit(); }).observe($('edCv').parentElement);
 window.addEventListener('resize', edFit);
-$('edDlg').addEventListener('keydown', e => {
+document.addEventListener('keydown', e => {
+  if(!$('edDlg').open || ($('helpDlg') && $('helpDlg').open)) return;
   const t = e.target;
-  if(t && /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)) return;
+  if(t && (t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || (t.tagName === 'INPUT' && /^(number|text)$/.test(t.type)))) return;
   if(!ed.pageCv) return;
-  const k = e.key;
-  if((e.ctrlKey || e.metaKey) && k.toLowerCase() === 'z'){ e.preventDefault(); edUndo(); return; }
-  if(e.ctrlKey || e.metaKey || e.altKey) return;
-  if(k === 'n' || k === 'N'){ edStep(1); return; }
-  if(k === 'p' || k === 'P'){ edStep(-1); return; }
-  if(k === 'd' || k === 'D'){ edSetDraw(!ed.draw); return; }
-  if(k === 'Delete' || k === 'Backspace'){ if(ed.sel >= 0){ e.preventDefault(); edDo(() => { ed.boxes.splice(ed.sel, 1); ed.sel = -1; }); } return; }
-  if(k.startsWith('Arrow')){
+  const k = e.key, lk = k.length === 1 ? k.toLowerCase() : k, mod = e.ctrlKey || e.metaKey;
+  if(mod && lk === 'z'){ e.preventDefault(); edUndo(); return; }
+  if(e.altKey) return;
+  if(k.startsWith('Arrow') && e.shiftKey){   // Shift + arrows nudge the selected box (with Ctrl: bigger steps)
     e.preventDefault();
-    if(ed.sel < 0 || !ed.boxes[ed.sel]){ if(k === 'ArrowLeft' || k === 'ArrowUp') edStep(-1); else edStep(1); return; }
-    const st = Math.max(1, Math.round(Math.min(ed.W, ed.H) / 200)) * (e.shiftKey ? 5 : 1), b = ed.boxes[ed.sel];
+    if(ed.sel < 0 || !ed.boxes[ed.sel]) return;
+    const st = Math.max(1, Math.round(Math.min(ed.W, ed.H) / 200)) * (mod ? 5 : 1), b = ed.boxes[ed.sel];
     const dx = k === 'ArrowLeft' ? -st : k === 'ArrowRight' ? st : 0, dy = k === 'ArrowUp' ? -st : k === 'ArrowDown' ? st : 0;
     const cx = Math.max(-b[0], Math.min(ed.W - b[2], dx)), cy = Math.max(-b[1], Math.min(ed.H - b[3], dy));
-    if(cx || cy) edDo(() => { ed.boxes[ed.sel] = [b[0] + cx, b[1] + cy, b[2] + cx, b[3] + cy]; });
+    if(cx || cy) edDo(() => { ed.boxes[ed.sel] = edZKeep([b[0] + cx, b[1] + cy, b[2] + cx, b[3] + cy], b); });
+    return;
   }
+  if(mod) return;
+  const pick = i => { if(i >= 0 && i < ed.boxes.length){ ed.sel = i; edRender(); } };
+  if(k === 'ArrowLeft' || k === 'PageUp' || lk === 'p'){ e.preventDefault(); edStep(-1); return; }
+  if(k === 'ArrowRight' || k === 'PageDown' || lk === 'n'){ e.preventDefault(); edStep(1); return; }
+  if(k === 'ArrowUp' || k === 'ArrowDown'){
+    e.preventDefault(); const n = ed.boxes.length; if(!n) return;
+    pick(ed.sel < 0 ? (k === 'ArrowDown' ? 0 : n - 1) : (ed.sel + (k === 'ArrowDown' ? 1 : n - 1)) % n); return;
+  }
+  if(/^[1-9]$/.test(k)){ pick(parseInt(k, 10) - 1); return; }
+  if(lk === 'd'){ edSetDraw(!ed.draw); return; }
+  if(k === 'Delete' || k === 'Backspace'){ if(ed.sel >= 0){ e.preventDefault(); edDo(() => { ed.boxes.splice(ed.sel, 1); ed.sel = -1; }); } return; }
+  if(lk === 'h'){ edSetZoom('2'); return; }
+  if(lk === 't'){ edSetZoom('3'); return; }
+  if(lk === 'o'){ edSetZoom('n'); return; }
+  if(lk === 'a'){ edSetZoom(''); return; }
+  if(k === '['){ $('edUp').click(); return; }
+  if(k === ']'){ $('edDown').click(); return; }
+  if(lk === 'w'){ $('edWhole').click(); return; }
+  if(lk === 'r'){ $('edReset').click(); return; }
+  if(lk === 's'){ $('edSort').click(); return; }
+  if(lk === 'f'){ $('edFlagOnly').click(); return; }
 });
 async function edOpenDlg(flagOnly){
   const files = Array.from($('file').files); if(!files.length) return;
@@ -2350,10 +2472,12 @@ const HELP = {
   'Image quality': '<p>Tweaks that help e-ink screens: sharpening for enlarged panels, e-ink contrast, darker midtones, moir&eacute; reduction for screentone, auto-levels for faded scans, and JPEG quality (higher is sharper and larger).</p>',
   'Metadata': '<p>Title, author, series and so on, filled in from the file when it has them. Blank fields keep each file&rsquo;s own values. With several files, each gets its own Title and Volume row.</p>',
   'Saved presets': '<p>Save all settings under a name (for example "X4 portrait") and load them in one tap. Files, metadata and panel edits are not included. Presets live in this browser only.</p>',
+  'Selected box': '<p>Choose how the selected box is zoomed: <b>Auto</b> follows your zoom settings, <b>Off</b> shows it as it is, <b>Halves</b> or <b>Thirds</b> show it whole and then as enlarged overlapping parts. Keys: A, O, H, T.</p>',
+  'Page': '<p>Move between pages with the arrow keys or the buttons. The bar shows how many flagged pages you have reviewed; with no scan it shows how many pages you have viewed.</p>',
   'Edit boxes': '<p>Click a box to select it, drag to move, drag handles to resize. <b>Draw box</b> adds a new one after the selected box. <b>Earlier / Later</b> change reading order. <b>Whole page</b> uses one box for the page. <b>Re-detect</b> resets this page. <b>Sort by reading order</b> re-sorts the boxes after you move or draw some. <b>Black gutters</b> re-detects it treating black gaps as the gutters. Delete every box to skip the page.</p>',
   'Box shape lock': '<p>Draw and resize boxes with exactly your screen&rsquo;s proportions (landscape or portrait), or keep the selected box&rsquo;s own proportions. Only corner handles are used while locked.</p>',
   'Screen preview': '<p>Shows what each box becomes in the output: coloured dashed areas are the enlarged parts shown after the whole box, and &ldquo;with 2+3&rdquo; marks small boxes sharing a screen. Switch between landscape, portrait and mixed.</p>',
-  'Pages to check': '<p>Flags pages that probably need a manual look: by default a box that may hold several panels, or a very big box beside others (tall, busy and overlap flags are optional), or filters pages by how many panels they have. Use <b>Step through flagged pages only</b> to skip the rest; turn it off to go through every page.</p>'
+  'Pages to check': '<p>Flags pages that probably need a manual look: by default a box that may hold several panels, a very big box beside others, or overlapping boxes (tall and busy flags are optional), or filters pages by how many panels they have. Use <b>Step through flagged pages only</b> to skip the rest; turn it off to go through every page.</p>'
 };
 function addInfo(head, label){
   const html = HELP[label]; if(!html) return;
