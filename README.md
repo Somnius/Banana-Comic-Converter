@@ -8,7 +8,7 @@ Turn comic and manga files (CBZ, ZIP or PDF) into pages that fill an e-ink scree
 
 Use it only with files you own or have the right to convert for personal use.
 
-If it saves you time or you happy with the results and enjoy the manga on your device, you can always: [buy me a coffee](https://ko-fi.com/curseofthebanana)
+If you are happy with the results and enjoy your mangas/comics on your device, you can always [buy me a coffee (:](https://ko-fi.com/curseofthebanana)
 
 ---
 
