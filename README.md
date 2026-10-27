@@ -34,7 +34,7 @@ The small **i** next to each section explains it. **How to use** and **Tips and 
 - **Input:** CBZ, ZIP (png, jpg, webp, gif, bmp) and PDF. Batch conversion, natural page sorting, cover first, credit pages last. Chapters from file or folder names, or PDF bookmarks.
 - **Screens:** Portrait, Landscape, or **Mixed** (wide panels on landscape screens, tall panels on portrait screens, in one file). Device presets for Xteink X4 and X3, Kindle, Kobo and others, or a custom size.
 - **Panel detection:** whitespace gutters with a fallback for busy pages, automatic detection of black gutters, reading order that handles tall panels beside stacked ones, and separation of panels that bleed into each other.
-- **Batch edits:** convert, review, edit Metadata and panels for your files in batch and download them all as a zip folder.
+- **Batch edits:** convert, review, edit Metadata and panels for your files in a batch and download them all as a zip folder.
 - **Zoom and splitting:** long panels are shown whole, then as two enlarged halves. Optional dense page zoom shows crowded screens whole, then as zoomed tiles. Cuts snap to blank gaps so speech bubbles stay whole where possible.
 - **Packing:** small panels share a screen (max 1, 2 or 3) when they stay large enough.
 - **Panel editor:** move, resize, draw, delete and reorder boxes; box shape lock to your screen's proportions; undo; a preview of the screens each box becomes. All controls sit in one side column next to the page, with a progress bar for flagged, reviewed and remaining pages.
