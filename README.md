@@ -56,6 +56,39 @@ The small **i** next to each section explains it. **How to use** and **Tips and 
 
 The XTCH output follows a community-written format description and has not been tested on every device. The cover thumbnail option is experimental. EPUB readers may not rotate automatically for mixed output.
 
+## Known limits and what to expect
+
+This is a hobby tool, not a finished product. It uses ordinary image analysis, with no AI, so it follows rules rather than understanding the page. It works best on pages with clear white or black gaps between panels.
+
+**Panel detection**
+- Most pages come out right, but some will need a fix in the editor. In a test, roughly 1 page in 4 was flagged for a manual look. Not every flagged page was actually wrong.
+- Panels with no borders, artwork that bleeds into the next panel, or panels that sit on top of each other can get a box that is slightly too big, too small or overlapping. Inset panels over a full-page drawing are the usual case.
+- Several panels can be merged into one box, or one panel split in two, especially on busy or very dark pages.
+- Reading order is a best guess. Unusual layouts can come out in the wrong order. The editor has **Sort order** and **Earlier / Later** to fix this.
+- Splash pages, double-page spreads and pages with large sound effects may be treated as one big panel, or cut in odd places.
+- Speech bubbles and text can be cut when a long panel or a zoom is split. Cuts move to blank gaps where there are any, otherwise they overlap. A larger overlap helps.
+- The page-flagging checks are tuned on a small set of pages. Treat flags as hints, not a guarantee, and page through anything important.
+
+**Output**
+- XTCH follows a community description of the format. It has not been tested on every Xteink device or firmware. Try a short file first.
+- Mixed-orientation EPUB asks the reader to rotate per page, but not every reader does. If yours doesn't, use portrait or landscape output instead.
+- Landscape XTCH pages are stored sideways, so you turn the device to read them.
+- Greyscale and dithering change how fine detail and screentone look on e-ink. Try the dither and moire settings if a page looks muddy.
+
+**Size and speed**
+- Everything is converted in your browser's memory, so big books are slow and use a lot of RAM. A 204-page volume converted to six outputs took about 2.5 minutes on a desktop and produced files of 44 to 88 MB. Phones and low-memory devices may stall on very large files, so convert in chunks or one output at a time.
+- Output files are large because pages are stored as images.
+
+**Your work is not saved**
+- Panel edits are lost if you reload or close the page. Presets and open sections are kept only in your own browser, on that device.
+
+**Other**
+- Tested mainly in Chromium (Chrome, Edge). Safari, Firefox and mobile browsers have had little testing, so layout or memory limits may differ.
+- Scanned PDFs are converted as page images. There is no text extraction or OCR.
+- Use only files you own or may convert for personal use.
+
+If something fails, open an issue and include a sample page (or a description of the layout), the settings you used, and the device or reader you tried it on. Those details are what make a detection problem fixable.
+
 ## Your data
 
 - Files are read and converted locally in your browser. Nothing is uploaded or shared.
