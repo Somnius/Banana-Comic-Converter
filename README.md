@@ -2,7 +2,7 @@
 
 Turn comic and manga files (CBZ, ZIP or PDF) into pages that fill an e-ink screen. It can find each panel and fit it to the screen, or simply cut every page into overlapping parts. Output as XTCH (Xteink devices), EPUB or CBZ.
 
-**Everything runs in your browser. Nothing is uploaded and nothing is installed.**
+**Everything runs in your browser. Nothing is uploaded and nothing is installed. No AI is used anywhere in the conversion: panels are found with plain image analysis (whitespace and border detection) that runs on your device, with no AI model and no online service.**
 
 **Live site: https://seethroughme.github.io/Banana-Comic-Converter/**
 
@@ -33,10 +33,13 @@ The small **i** next to each section explains it. **How to use** and **Tips and 
 
 - **Input:** CBZ, ZIP (png, jpg, webp, gif, bmp) and PDF. Batch conversion, natural page sorting, cover first, credit pages last. Chapters from file or folder names, or PDF bookmarks.
 - **Screens:** Portrait, Landscape, or **Mixed** (wide panels on landscape screens, tall panels on portrait screens, in one file). Device presets for Xteink X4 and X3, Kindle, Kobo and others, or a custom size.
-- **Panel detection:** whitespace gutters with a fallback for busy pages, automatic detection of black gutters, reading order that handles tall panels beside stacked ones.
+- **Panel detection:** whitespace gutters with a fallback for busy pages, automatic detection of black gutters, reading order that handles tall panels beside stacked ones, and separation of panels that bleed into each other.
 - **Zoom and splitting:** long panels are shown whole, then as two enlarged halves. Optional dense page zoom shows crowded screens whole, then as zoomed tiles. Cuts snap to blank gaps so speech bubbles stay whole where possible.
 - **Packing:** small panels share a screen (max 1, 2 or 3) when they stay large enough.
-- **Panel editor:** move, resize, draw, delete and reorder boxes; box shape lock to your screen's proportions; undo; a preview of the screens each box becomes; flags for pages that may need a manual look (several panels in one box, very big boxes) or a filter by panel count; keyboard shortcuts.
+- **Panel editor:** move, resize, draw, delete and reorder boxes; box shape lock to your screen's proportions; undo; a preview of the screens each box becomes. All controls sit in one side column next to the page, with a progress bar for flagged, reviewed and remaining pages.
+- **Zoom per box:** pick Auto, Off, overlapping Halves or overlapping Thirds for any single box.
+- **Pages to check:** flags pages with several panels in one box, very big boxes or overlapping boxes (tall and busy boxes optional), or filters pages by panel count. Step through flagged pages only.
+- **Keyboard shortcuts:** arrows change page, up/down or 1-9 pick a box, H / T / O / A set zoom, plus D, W, R, S, F, [ ], Delete and Ctrl+Z. The keys are shown on the buttons.
 - **Image quality:** sharpen, e-ink contrast, darker midtones, screentone moire reduction, auto-levels, JPEG quality, and XTCH dither styles.
 - **Metadata:** title, author, series, volume, publisher, year, language, description. Stored in EPUB and CBZ (ComicInfo.xml); XTCH keeps title, author, publisher and language.
 - **Cover:** kept whole on a portrait page in landscape and mixed output.
@@ -55,6 +58,7 @@ The XTCH output follows a community-written format description and has not been 
 ## Your data
 
 - Files are read and converted locally in your browser. Nothing is uploaded or shared.
+- No AI or machine learning is used during conversion. Detection is ordinary image analysis, so results are repeatable and you can correct any page in the editor.
 - Presets and which sections are open are saved in your browser's local storage on that device only. Clearing site data removes them.
 - Panel edits are kept only until you reload the page.
 - The only outside link is the Ko-fi button.
