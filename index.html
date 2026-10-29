@@ -213,6 +213,35 @@
   #helpDlg li{margin:.3em 0}
   kbd{font:600 .8em ui-monospace,Menlo,monospace;background:var(--card);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px}
   .sw{display:inline-block;width:.9em;height:.9em;border-radius:3px;vertical-align:-1px;margin-right:4px;border:1.5px dashed}
+  /* ---- pages ---- */
+  #pgGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;margin:10px 0;max-height:420px;overflow:auto;padding:2px}
+  .pgT{position:relative;border:2px solid var(--line);border-radius:8px;background:var(--card);padding:3px;cursor:grab;text-align:center;font-size:.72rem;color:var(--mut);user-select:none}
+  .pgT canvas{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:contain;background:#fff;border-radius:4px}
+  .pgT.sel{border-color:var(--acc)}
+  .pgT.hid canvas{opacity:.25}.pgT.hid{border-style:dashed}
+  .pgT.over{outline:3px solid var(--acc)}
+  .pgT b{position:absolute;top:5px;left:5px;background:var(--bg);color:var(--fg);border-radius:4px;padding:0 4px;font-size:.68rem}
+  .pgT i{position:absolute;bottom:20px;right:5px;background:var(--acc);color:var(--onacc);border-radius:4px;padding:0 4px;font-size:.66rem;font-style:normal}
+  #pgBar{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  #pgBar .btn2{margin:0}
+  #dirDlg[open]{display:block;height:auto;max-height:92vh;width:min(760px,96vw)}
+  #estBox b.warn{color:#b45309}
+  #rvDlg[open]{display:block;height:92vh;width:min(1100px,97vw)}
+  .rvHead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:6px}
+  .rvHead .btn2{margin:0 0 0 auto}
+  #rvGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:10px}
+  .rvT{position:relative;border:2px solid var(--line);border-radius:8px;background:var(--card);padding:4px;font-size:.75rem;color:var(--mut);cursor:pointer}
+  .rvT canvas{display:block;width:100%;height:auto;background:#fff;border-radius:4px;min-height:80px}
+  .rvT.flag{border-color:#b45309}.rvT.edt{border-color:var(--acc)}
+  .rvT .rvB{display:flex;justify-content:space-between;gap:4px;align-items:center;margin-top:3px}
+  .rvT .rvW{padding:0 6px;font-size:.7rem;margin:0;min-height:0}
+  .rvT .tg{color:#b45309;font-weight:600}
+  .qpCtl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:8px}
+  .qpCtl .btn2{margin:0}
+  .qpImgs{display:flex;gap:8px;margin:8px 0}
+  .qpImgs figure{margin:0;flex:1 1 0;min-width:0;text-align:center;font-size:.75rem;color:var(--mut)}
+  .qpImgs canvas{width:100%;height:auto;border:1px solid var(--line);background:#fff;image-rendering:auto}
+  #xtcOpt .btn2{margin:0 0 0 8px}
 </style>
 </head>
 <body>
@@ -238,31 +267,82 @@
   <div><button type="button" class="btn2" id="fclear" hidden>Clear all</button> <small id="dropMsg"></small></div>
 </div></details>
 
+<details class="sec" id="secPages"><summary><span class="stitle">Pages</span><span class="ssum" id="sumPages"></span></summary>
+<div class="secBody">
+  <div class="f" id="pgFileRow" hidden><label for="pgFile">File</label><select id="pgFile"></select></div>
+  <div id="pgBar">
+    <button type="button" class="btn2" id="pgEarlier">&larr; Earlier</button><button type="button" class="btn2" id="pgLater">Later &rarr;</button>
+    <button type="button" class="btn2" id="pgHide">Hide / show</button><button type="button" class="btn2" id="pgCover">Make cover</button>
+    <button type="button" class="btn2" id="pgWhole">Keep whole</button><button type="button" class="btn2" id="pgEdit">Edit panels</button>
+  </div>
+  <div id="pgBar2" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+    <button type="button" class="btn2" id="pgScan">Find blank pages</button><button type="button" class="btn2" id="pgSelBad">Select blank / odd</button>
+    <button type="button" class="btn2" id="pgSelNone">Clear selection</button><button type="button" class="btn2" id="pgReset">Reset this file</button>
+  </div>
+  <small id="pgMsg" style="display:block;margin-top:6px"></small>
+  <div id="pgGrid" role="list"></div>
+  <small>Click pages to select them (Shift for a range), drag to reorder. Hidden pages are left out of the output. Thumbnails load as you scroll.</small>
+</div></details>
+
 <details class="sec" id="secDevice" open><summary><span class="stitle">Device and reading</span><span class="ssum" id="sumDevice"></span></summary>
 <div class="secBody">
   <div class="f"><span>Reading direction</span>
-    <div class="seg"><label><input type="radio" name="dir" value="rtl" checked><span>Right-to-left (manga)</span></label><label><input type="radio" name="dir" value="ltr"><span>Left-to-right</span></label></div></div>
+    <div class="seg"><label><input type="radio" name="dir" value="rtl" checked><span>Right-to-left (manga)</span></label><label><input type="radio" name="dir" value="ltr"><span>Left-to-right</span></label></div>
+    <button type="button" class="btn2" id="dirTest">Test direction on my page</button></div>
   <div class="f"><label for="preset">Screen preset</label>
     <select id="preset">
-      <option value="480,800" selected>Xteink X4 / X4 Pro (480&times;800)</option>
-      <option value="528,792">Xteink X3 (528&times;792)</option>
-      <option value="1072,1448">Kindle 6" / Kobo Clara (1072&times;1448)</option>
-      <option value="1236,1648">Kindle Paperwhite 6.8" (1236&times;1648)</option>
-      <option value="1264,1680">Kobo Libra 2 / 7" (1264&times;1680)</option>
-      <option value="758,1024">Older 6" e-ink (758&times;1024)</option>
-      <option value="">Custom (enter size)</option>
+      <optgroup label="Xteink">
+        <option value="480,800" selected>Xteink X4 / X4 Pro (480&times;800)</option>
+        <option value="528,792">Xteink X3 (528&times;792)</option>
+      </optgroup>
+      <optgroup label="Kindle">
+        <option value="1072,1448">Kindle 6" basic (1072&times;1448)</option>
+        <option value="1236,1648">Kindle Paperwhite 6.8" (1236&times;1648)</option>
+        <option value="1264,1680">Kindle Oasis 7" (1264&times;1680)</option>
+        <option value="1860,2480">Kindle Scribe 10.2" (1860&times;2480)</option>
+      </optgroup>
+      <optgroup label="Kobo">
+        <option value="1072,1448">Kobo Clara (1072&times;1448)</option>
+        <option value="1264,1680">Kobo Libra 2 (1264&times;1680)</option>
+        <option value="1440,1920">Kobo Sage 8" (1440&times;1920)</option>
+        <option value="1404,1872">Kobo Elipsa 10.3" (1404&times;1872)</option>
+      </optgroup>
+      <optgroup label="Boox">
+        <option value="1072,1448">Boox Go 6 (1072&times;1448)</option>
+        <option value="824,1648">Boox Palma (824&times;1648)</option>
+        <option value="1404,1872">Boox Note Air 10.3" (1404&times;1872)</option>
+        <option value="1860,2480">Boox Tab Ultra (1860&times;2480)</option>
+      </optgroup>
+      <optgroup label="Other">
+        <option value="758,1024">Older 6" e-ink (758&times;1024)</option>
+        <option value="">Custom (enter size)</option>
+      </optgroup>
     </select></div>
+  <small>Sizes are typical specs; if your reader differs, choose Custom and type its resolution.</small>
   <div class="f"><span>Screen size (portrait W &times; H)</span><span class="inl"><input type="number" id="cw" value="480" min="200"> &times; <input type="number" id="ch" value="800" min="200"></span></div>
 </div></details>
 
 <details class="sec" id="secOutput" open><summary><span class="stitle">Output</span><span class="ssum" id="sumOutput"></span></summary>
 <div class="secBody">
+  <div class="f"><label for="devProf">Device profile</label>
+    <select id="devProf">
+      <option value="">Choose a profile...</option>
+      <option value="x4a">Xteink X4: XTCH, portrait, parts of 200 screens</option>
+      <option value="x4b">Xteink X4: XTC black and white, portrait, parts of 300 screens (smallest files)</option>
+      <option value="x3a">Xteink X3: XTCH, portrait, parts of 150 screens</option>
+      <option value="x3b">Xteink X3: XTC black and white, portrait, parts of 300 screens (smallest files)</option>
+    </select></div>
+  <small>Sets screen size, portrait, file type and a safe split size in one go.</small>
   <div class="f col1"><span>Screen shapes <small>(one file per shape)</small></span>
     <div class="opts"><label class="opt"><input type="checkbox" id="oPort" checked><span>Portrait</span></label><label class="opt"><input type="checkbox" id="oLand" checked><span>Landscape</span></label><label class="opt"><input type="checkbox" id="oMix"><span>Mixed</span></label></div></div>
   <div class="f col1"><span>File types</span>
-    <div class="opts"><label class="opt"><input type="checkbox" id="fX" checked><span>XTCH</span></label><label class="opt"><input type="checkbox" id="fEpub"><span>EPUB</span></label><label class="opt"><input type="checkbox" id="fCbz"><span>CBZ</span></label></div></div>
+    <div class="opts"><label class="opt"><input type="checkbox" id="fX" checked><span>XTCH</span></label><label class="opt"><input type="checkbox" id="fXtc"><span>XTC (black &amp; white)</span></label><label class="opt"><input type="checkbox" id="fEpub"><span>EPUB</span></label><label class="opt"><input type="checkbox" id="fCbz"><span>CBZ</span></label></div></div>
   <small id="outNames"></small>
+  <div style="margin:8px 0"><button type="button" class="btn2" id="estBtn">Estimate size and screens</button></div>
+  <div id="estBox" class="help" hidden></div>
   <div class="f"><label for="splitParts">Split into parts <small>(for devices that run out of memory)</small></label><select id="splitParts"><option value="0" selected>Off (one file)</option><option value="100">About 100 screens per file</option><option value="150">About 150 screens per file</option><option value="200">About 200 screens per file</option><option value="300">About 300 screens per file</option><option value="500">About 500 screens per file</option></select></div>
+  <div class="f"><label for="zipLayout">ZIP download layout</label><select id="zipLayout"><option value="flat" selected>All files together</option><option value="book">One folder per book</option><option value="sets">One folder per book, and a folder for each set of parts</option></select></div>
+  <small>Folders only apply to the ZIP download. Downloading files one by one cannot make folders.</small>
   <small id="splitNote">Large XTCH files can run a small e-reader out of memory. Splitting makes several smaller files per shape and type (part 1, part 2 ...), cut at chapter starts where possible.</small>
   <div id="mixRow" hidden>
     <div class="f"><label for="mixAsp">Mixed: use landscape when width &divide; height is at least</label><input type="number" id="mixAsp" value="1.15" step="0.05" min="0.6" max="3"></div>
@@ -273,7 +353,8 @@
     <div class="sub2">XTCH options</div>
     <div class="f"><label for="xRot">Landscape page rotation</label><select id="xRot"><option value="cw" selected>Clockwise</option><option value="ccw">Counter-clockwise</option></select></div>
     <small>If landscape pages look upside-down on your device, use the other one.</small>
-    <div class="f"><label for="xDither">Dither style (4 gray levels)</label><select id="xDither"><option value="fs" selected>Floyd-Steinberg (smooth)</option><option value="atk">Atkinson (crisper)</option><option value="bayer">Ordered pattern</option><option value="none">None (hard levels)</option></select></div>
+    <div class="f"><label for="xDither">Dither style (XTCH: 4 grays, XTC: black and white)</label><select id="xDither"><option value="fs" selected>Floyd-Steinberg (smooth)</option><option value="atk">Atkinson (crisper)</option><option value="bayer">Ordered pattern</option><option value="none">None (hard levels)</option></select></div>
+    <div class="f" id="xtcOpt"><label for="xtcThr">XTC black and white cutoff (lower = more white)</label><input type="number" id="xtcThr" value="128" min="40" max="220" step="4"><button type="button" class="btn2" id="xtcAuto" title="Pick the cutoff from your pages">Auto</button></div>
     <label class="chk"><input type="checkbox" id="xThumb"><span>Add a cover thumbnail (experimental, untested on devices)</span></label>
   </div>
   <div hidden>
@@ -298,7 +379,7 @@
   </div>
   <div id="smartOpts">
   <small>Check how each page is split into panels and fix mistakes. Optional.</small>
-  <div class="edBtns"><button type="button" class="btn2" id="edOpen" disabled>Preview and fix panels</button><button type="button" class="btn2" id="edOpenFlag" disabled>Review flagged pages only</button> <small id="edCount"></small></div>
+  <div class="edBtns"><button type="button" class="btn2" id="edOpen" disabled>Preview and fix panels</button><button type="button" class="btn2" id="edOpenFlag" disabled>Review flagged pages only</button><button type="button" class="btn2" id="rvOpen" disabled>Review all pages (grid)</button> <small id="edCount"></small></div>
   <div class="f"><label for="gutterMode">Gap colour between panels</label><select id="gutterMode"><option value="auto" selected>Auto (spot black gutters)</option><option value="light">White gaps only</option><option value="dark">Black gaps on every page</option></select></div>
   <div class="sub2">Zoom and splitting <span class="hint">show a screen whole, then enlarged parts</span></div>
   <label class="chk"><input type="checkbox" id="splitTall" checked><span><b>Long panels:</b> show whole, then as two enlarged halves</span></label>
@@ -313,6 +394,15 @@
 
 <details class="sec" id="secQuality"><summary><span class="stitle">Image quality</span><span class="ssum" id="sumQuality"></span></summary>
 <div class="secBody">
+  <div id="qpBox">
+    <div class="qpCtl">
+      <label>Page <input type="number" id="qpPage" value="1" min="1" style="width:5em"></label>
+      <label>Show as <select id="qpView"><option value="gray">Grey (as processed)</option><option value="xtch">XTCH (4 greys)</option><option value="xtc">XTC (black and white)</option></select></label>
+      <button type="button" class="btn2" id="qpRun">Preview before / after</button>
+    </div>
+    <div class="qpImgs" id="qpImgs" hidden><figure><canvas id="qpA"></canvas><figcaption>Original</figcaption></figure><figure><canvas id="qpB"></canvas><figcaption id="qpCap">After</figcaption></figure></div>
+    <small id="qpMsg">Shows one page at your screen size with the settings below, so you can tune without converting the book. It updates as you change them. Enlarged panels look sharper than this whole-page view.</small>
+  </div>
   <label class="chk"><input type="checkbox" id="eSharp" checked><span>Sharpen (helps enlarged panels look crisp)</span></label>
   <div class="f"><label for="sharpAmt">Sharpen strength (0.2&ndash;1.5)</label><input type="number" id="sharpAmt" value="0.5" step="0.1" min="0.2" max="1.5"></div>
   <label class="chk"><input type="checkbox" id="eContrast" checked><span>E-ink contrast (deeper blacks, whiter paper)</span></label>
@@ -325,6 +415,7 @@
 <details class="sec" id="metaBox"><summary><span class="stitle">Metadata</span><span class="ssum" id="sumMeta"></span></summary>
 <div class="secBody">
   <small>Filled in from the file when it has any. Blank fields keep what each file already has. With several files, each gets its own Title and Volume row; the rest applies to all. XTCH stores only title, author, publisher and language.</small>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0"><button type="button" class="btn2" id="metaName">Fill from file name</button><button type="button" class="btn2" id="metaCover">Choose cover page</button><small id="metaMsg"></small></div>
   <div class="mgrid">
     <label id="lTitle">Title <input type="text" id="mTitle"></label>
     <label>Author <input type="text" id="mAuthor"></label>
@@ -346,11 +437,33 @@
   <div><button type="button" class="btn2" id="cfgLoad">Load</button><button type="button" class="btn2" id="cfgDel">Delete</button></div>
   <div class="f"><label for="cfgName">Save current settings as</label><input type="text" id="cfgName" placeholder="e.g. X4 portrait" autocomplete="off"></div>
   <div><button type="button" class="btn2" id="cfgSave">Save preset</button> <small id="cfgMsg"></small></div>
+  <div style="margin-top:8px"><button type="button" class="btn2" id="cfgExport">Export presets to a file</button><button type="button" class="btn2" id="cfgImport">Import presets from a file</button><input type="file" id="cfgFile" accept=".json,application/json" hidden></div>
 </div></details>
 
 </div>
 </div>
 
+<dialog id="rvDlg">
+  <div class="rvHead">
+    <h2 style="margin:0;font-size:1.05rem">Review all pages</h2>
+    <select id="rvFile" hidden></select>
+    <div class="seg" id="rvFilter"><label><input type="radio" name="rvf" value="all" checked><span>All</span></label><label><input type="radio" name="rvf" value="flag"><span>Flagged</span></label><label><input type="radio" name="rvf" value="edited"><span>Edited</span></label></div>
+    <small id="rvMsg"></small>
+    <button type="button" class="btn2" id="rvClose">Close</button>
+  </div>
+  <small>Click a page to fix it in the editor. <b>Whole</b> keeps a page as one box. Red boxes are the detected panels, numbered in reading order. Flags use the sensitivity set in the editor.</small>
+  <div id="rvGrid"></div>
+</dialog>
+<dialog id="dirDlg">
+  <h2 style="margin:0 0 6px;font-size:1.05rem">Which reading direction is right?</h2>
+  <p id="dirNote" style="margin:0 0 10px;font-size:.9rem"></p>
+  <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center">
+    <div style="text-align:center"><canvas id="dirR" style="max-width:100%"></canvas><div><b>Right-to-left</b> (manga)</div><button type="button" class="btn2" id="dirUseR">Use right-to-left</button></div>
+    <div style="text-align:center"><canvas id="dirL" style="max-width:100%"></canvas><div><b>Left-to-right</b> (western)</div><button type="button" class="btn2" id="dirUseL">Use left-to-right</button></div>
+  </div>
+  <p style="margin:10px 0 0;font-size:.85rem">The numbers show the order you would read the panels. Pick the picture where 1, 2, 3... follow the story.</p>
+  <div style="margin-top:10px"><button type="button" class="btn2" id="dirClose">Close</button></div>
+</dialog>
 <dialog id="helpDlg">
   <div class="tabs" role="tablist">
     <button type="button" class="btn2" data-tab="start">Getting started</button>
@@ -371,6 +484,8 @@
       <li><b>Device and reading:</b> choose right-to-left (manga) or left-to-right, and your screen preset. Choose Custom to type a size.</li>
       <li><b>Output:</b> tick the screen shapes (Portrait, Landscape, Mixed) and the file types (XTCH, EPUB, CBZ). You get one file for every combination, and the file names are listed under the buttons. XTCH is on by default.</li>
       <li><b>Panels:</b> pick a conversion mode. <i>Smart panels</i> finds each panel and fits it to the screen. <i>Simple page split</i> just cuts every page into 2 or 3 overlapping parts, for a quick conversion. See the Modes and output tab.</li>
+      <li><b>Pages</b> (optional): look at every page as a thumbnail, drag to reorder, hide ads and credits, find blank scans, and pick the cover page.</li>
+      <li><b>Device profile</b> (Output) sets the screen, file type and a safe split size for an X3 or X4 in one go; <b>Estimate size and screens</b> predicts the result and warns when files may be too big for the device.</li>
       <li>Optional: check the panels in the editor, adjust image quality, or edit metadata.</li>
       <li>Tick <b>I own these files</b> in the bottom bar and press <b>Convert</b>. A progress bar shows the file, page and time left, and Cancel stops it between pages (files that already finished stay available). For several files you can download everything as one ZIP.</li>
     </ol>
@@ -378,7 +493,7 @@
     <ul>
       <li>Sections open and close; each header shows a one-line summary of its current settings. Use <b>Expand all</b> / <b>Collapse all</b> at the top. Which sections are open is remembered in this browser.</li>
       <li>The small <b><i>i</i></b> next to a section title explains that section.</li>
-      <li><b>Saved presets</b> stores all settings under a name (not files, metadata or panel edits). Presets live in this browser only, so they do not follow you to another browser or device, and clearing site data removes them.</li>
+      <li><b>Saved presets</b> stores all settings under a name (not files, metadata or panel edits). Presets live in this browser only, but Export and Import move them between browsers and devices, and clearing site data removes them.</li>
       <li>Page order inside a file is sorted naturally. A page named "cover" goes first; credits, scanlation and thanks pages go last. Chapters come from file or folder names (such as "ch12"), or from the PDF's bookmarks, and are used for the EPUB table of contents and the XTCH chapter list.</li>
     </ul>
   </div>
@@ -434,6 +549,7 @@
     <ul>
       <li><b>Select</b> a box by clicking it (the smallest box under the pointer wins). <b>Move</b> it by dragging. <b>Resize</b> with the corner and edge handles.</li>
       <li><b>Draw box:</b> turn it on, then drag on the page. The new box goes after the selected one in the order.</li>
+      <li><b>Merge next</b> (<kbd>M</kbd>) joins the selected box with the one after it. <b>Split by line</b> (<kbd>C</kbd>) lets you drag a line across a box to cut it in two; a mostly horizontal drag makes a horizontal cut, a mostly vertical drag a vertical one. <b>Review all pages</b> (Panels section) shows every page with its boxes in a grid so you can open only the bad ones.</li>
       <li><b>Delete box</b> removes it. Delete every box on a page to skip that page (ads, credits).</li>
       <li><b>Earlier / Later</b> move the selected box in the reading order. <b>Sort by reading order</b> re-sorts every box automatically; it handles a tall panel beside stacked ones.</li>
       <li><b>Whole page</b> replaces all boxes with one box covering the page (good for splash pages).</li>
@@ -501,6 +617,8 @@
       <li><b>A box holds several panels, or the page was missed?</b> Use Review flagged pages only, then redraw or resize the boxes. Raise sensitivity for more flags, lower it for fewer.</li>
       <li><b>Speech bubble cut in half?</b> Use a larger overlap.</li>
       <li><b>Device runs out of memory or will not open a big XTCH?</b> Set <i>Split into parts</i> under Output (about 150 to 200 screens per file is a good start). Each part is a separate, smaller file that starts at a chapter where possible. Fewer screens also helps: one orientation only, long-panel split and dense zoom off, max panels per screen 3.</li>
+      <li><b>Want black and white only, or smaller files?</b> Tick <i>XTC (black &amp; white)</i> under File types. It stores 1 bit per pixel, so each screen is about half the size of XTCH. Use the <i>cutoff</i> number to make pages lighter or darker, and the dither style to choose between smooth and crisp.</li>
+      <li><b>Split files in folders?</b> With <i>Split into parts</i> on, set <i>ZIP download layout</i> to put each book (and each set of parts) in its own folder inside the ZIP. Parts are named part1, part2 ... (part01 ... when there are ten or more).</li>
       <li><b>Landscape XTCH looks upside-down?</b> Switch the page rotation.</li>
       <li><b>Grays look faded?</b> Raise Darken midtones, or try Auto-levels for faded scans. <b>Screentone looks wavy?</b> Turn on moir&eacute; reduction.</li>
       <li><b>Slow on large PDFs?</b> Conversion runs in the page itself and pauses between pages so Cancel stays responsive; very large PDFs can still make the tab feel slow.</li>
@@ -521,7 +639,7 @@
     </ul>
     <h3>Output</h3>
     <ul>
-      <li>XTCH follows a community description of the format and has not been tested on every Xteink device or firmware. Try a short file first.</li>
+      <li>XTCH and XTC follow community descriptions of the formats and have not been tested on every Xteink device or firmware. Try a short file first.</li>
       <li>Large XTCH files can run a device out of memory, because every screen is stored uncompressed. If that happens, use <i>Split into parts</i> under Output, use one orientation, or turn off zoom options that add screens.</li>
       <li>Mixed-orientation EPUB asks the reader to rotate per page, but not every reader does. If yours doesn't, use portrait or landscape output instead.</li>
       <li>Landscape XTCH pages are stored sideways, so turn the device to read them.</li>
@@ -573,6 +691,8 @@
           <button type="button" class="btn2" id="edDel">Delete <kbd>Del</kbd></button>
           <button type="button" class="btn2" id="edUp">Earlier <kbd>[</kbd></button>
           <button type="button" class="btn2" id="edDown">Later <kbd>]</kbd></button>
+          <button type="button" class="btn2" id="edMerge" title="Join this box and the next one into one box">Merge next <kbd>M</kbd></button>
+          <button type="button" class="btn2" id="edCut" title="Drag a line across a box to cut it in two"><span class="lbl">Split by line</span> <kbd>C</kbd></button>
         </div>
       </section>
       <section>
@@ -649,7 +769,6 @@
 <div id="log"></div>
 <img id="prev" alt="preview">
 <div id="links"></div>
-
 <div class="legal">
   <p><strong>About your files.</strong> Banana Comic Converter does not host, store, upload or share any comics. Conversion happens locally in your browser, and the file you choose never leaves your device. It is meant for personal format-shifting of files you legally own or are allowed to use. Please do not use it to copy or distribute material you don't have rights to.</p>
   <p>PDF reading uses PDF.js by Mozilla (Apache License 2.0). XTCH output follows a community-written format description and is untested on some devices.</p>
@@ -1251,9 +1370,9 @@ async function emit(mode, us, scales, q){
   if(OPT.sharpen > 0 || OPT.contrast || OPT.gamma !== 1 || OPT.autoLevels) postProcess(ctx, mode.W, mode.H);
   const th = mode.thumbHolder || mode;
   if(mode.xtch && OPT.thumb && !th.thumb && mode.screens.length === 0) th.thumb = makeThumb(c);
-  const xth = mode.xtch ? xthPage(ctx, mode.W, mode.H, OPT.dither, mode.rot) : null;
+  const xth = mode.xtch && OPT.wantXth ? xthPage(ctx, mode.W, mode.H, OPT.dither, mode.rot) : null, xtg = mode.xtch && OPT.wantXtg ? xtgPage(ctx, mode.W, mode.H, OPT.dither, mode.rot, OPT.xtcThr) : null;
   const blob = await canvasToBlob(c, q);
-  mode.screens.push({data: new Uint8Array(await blob.arrayBuffer()), chap: us[0].chap, xth, w: mode.W, h: mode.H, cover: !!mode.isCover});
+  mode.screens.push({data: new Uint8Array(await blob.arrayBuffer()), chap: us[0].chap, xth, xtg, w: mode.W, h: mode.H, cover: !!mode.isCover});
   if(mode.screens.length % 30 === 1){
     const img = $('prev'); if(img.dataset.u) URL.revokeObjectURL(img.dataset.u);
     img.dataset.u = URL.createObjectURL(blob); img.src = img.dataset.u; img.style.display = 'block'; img.style.width = Math.min(mode.W, 360) + 'px';
@@ -1577,16 +1696,50 @@ function xthPage(ctx, W, H, dither, rot){
   }
   return out;
 }
-function buildXtch(mode, chapters, md, rtl){
+// XTG page for XTC files: 1 bit per pixel, rows top to bottom, most significant bit first, 1 = white. thr is the black/white cutoff.
+function xtgPage(ctx, W, H, dither, rot, thr){
+  const px = ctx.getImageData(0, 0, W, H).data, n = W * H;
+  let g = new Float32Array(n);
+  for(let i = 0; i < n; i++) g[i] = px[i * 4];
+  if(rot){
+    const r = new Float32Array(n);
+    for(let y = 0; y < H; y++) for(let x = 0; x < W; x++){
+      const nx = rot === 'cw' ? H - 1 - y : y, ny = rot === 'cw' ? x : W - 1 - x;
+      r[ny * H + nx] = g[y * W + x];
+    }
+    g = r; const t = W; W = H; H = t;
+  }
+  const dm = dither === true ? 'fs' : (dither || 'none'), BAY = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]], bpr = (W + 7) >> 3;
+  const out = new Uint8Array(22 + bpr * H), dv = new DataView(out.buffer);
+  out.set([0x58, 0x54, 0x47, 0x00], 0); dv.setUint16(4, W, true); dv.setUint16(6, H, true); dv.setUint32(10, bpr * H, true);
+  for(let y = 0; y < H; y++) for(let x = 0; x < W; x++){
+    const i = y * W + x; let v = g[i] < 0 ? 0 : g[i] > 255 ? 255 : g[i];
+    if(dm === 'bayer') v = Math.min(255, Math.max(0, v + (BAY[y & 3][x & 3] / 16 - 0.46875) * 128));
+    const bit = v >= thr ? 1 : 0, e = v - (bit ? 255 : 0);
+    if(dm === 'fs'){
+      if(x + 1 < W) g[i + 1] += e * 7 / 16;
+      if(y + 1 < H){ if(x > 0) g[i + W - 1] += e * 3 / 16; g[i + W] += e * 5 / 16; if(x + 1 < W) g[i + W + 1] += e / 16; }
+    }else if(dm === 'atk'){
+      const q = e / 8;
+      if(x + 1 < W) g[i + 1] += q; if(x + 2 < W) g[i + 2] += q;
+      if(y + 1 < H){ if(x > 0) g[i + W - 1] += q; g[i + W] += q; if(x + 1 < W) g[i + W + 1] += q; }
+      if(y + 2 < H) g[i + 2 * W] += q;
+    }
+    if(bit) out[22 + y * bpr + (x >> 3)] |= 0x80 >> (x & 7);
+  }
+  return out;
+}
+function buildXtch(mode, chapters, md, rtl, bw){
+  const P = s => bw ? s.xtg : s.xth;
   const title = md.title + (mode.suffix ? ' - ' + (mode.mixed ? 'mixed' : (mode.land ? 'landscape' : 'portrait')) : '');
   const scr = mode.screens, n = scr.length, W = mode.rot ? mode.H : mode.W, H = mode.rot ? mode.W : mode.H;
   const str = (t, len) => { const b = new Uint8Array(len); b.set(enc.encode(t).subarray(0, len - 1)); return b; };
   const spans = [];
   scr.forEach((s, i) => { const l = spans[spans.length - 1]; if(l && l.ci === s.chap) l.end = i; else spans.push({ci: s.chap, start: i, end: i}); });
   const metaOff = 56, chapOff = metaOff + 256, idxOff = chapOff + 96 * spans.length, dataOff = idxOff + 16 * n;
-  const th = OPT.thumb && mode.thumb ? mode.thumb : null, thumbOff = th ? dataOff + scr.reduce((a, s) => a + s.xth.length, 0) : 0;
+  const th = OPT.thumb && mode.thumb ? mode.thumb : null, thumbOff = th ? dataOff + scr.reduce((a, s) => a + P(s).length, 0) : 0;
   const head = new DataView(new ArrayBuffer(56));
-  head.setUint32(0, 0x48435458, true);                          // "XTCH"
+  head.setUint32(0, bw ? 0x00435458 : 0x48435458, true);          // "XTCH" or "XTC\0"
   head.setUint16(4, 0x0100, true); head.setUint16(6, n, true);
   head.setUint8(8, rtl ? 1 : 0); head.setUint8(9, 1); head.setUint8(10, th ? 1 : 0); head.setUint8(11, spans.length ? 1 : 0);
   head.setUint32(12, 1, true);
@@ -1600,8 +1753,8 @@ function buildXtch(mode, chapters, md, rtl){
   spans.forEach((s, i) => { chap.set(str(chapters[s.ci].title, 80), i * 96); cv.setUint16(i * 96 + 80, s.start, true); cv.setUint16(i * 96 + 82, s.end, true); });
   const idx = new Uint8Array(16 * n), iv = new DataView(idx.buffer); let off = dataOff;
   scr.forEach((s, i) => {
-    iv.setBigUint64(i * 16, BigInt(off), true); iv.setUint32(i * 16 + 8, s.xth.length, true);
-    const xd = new DataView(s.xth.buffer, s.xth.byteOffset); iv.setUint16(i * 16 + 12, xd.getUint16(4, true), true); iv.setUint16(i * 16 + 14, xd.getUint16(6, true), true); off += s.xth.length;
+    iv.setBigUint64(i * 16, BigInt(off), true); iv.setUint32(i * 16 + 8, P(s).length, true);
+    const xd = new DataView(P(s).buffer, P(s).byteOffset); iv.setUint16(i * 16 + 12, xd.getUint16(4, true), true); iv.setUint16(i * 16 + 14, xd.getUint16(6, true), true); off += P(s).length;
   });
   const tail = [];
   if(th){   // thumbnail area: one 16-byte index entry (same layout as the page index) followed by the XTG image
@@ -1609,16 +1762,16 @@ function buildXtch(mode, chapters, md, rtl){
     ti.setBigUint64(0, BigInt(thumbOff + 16), true); ti.setUint32(8, th.length, true); ti.setUint16(12, td.getUint16(4, true), true); ti.setUint16(14, td.getUint16(6, true), true);
     tail.push(ti.buffer, th);
   }
-  return new Blob([head.buffer, meta, chap, idx, ...scr.map(s => s.xth), ...tail], {type: 'application/octet-stream'});
+  return new Blob([head.buffer, meta, chap, idx, ...scr.map(P), ...tail], {type: 'application/octet-stream'});
 }
 
 window.__outs = [];
-function addLink(blob, name){
+function addLink(blob, name, book, set){
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = name;
   a.textContent = `Download ${name} (${(blob.size / 1048576).toFixed(1)} MB)`;
   $('links').appendChild(a);
-  window.__outs.push({name, blob});
+  window.__outs.push({name, blob, book, set});
 }
 
 /* ---------- input sources: CBZ and PDF ---------- */
@@ -1741,10 +1894,10 @@ function readSettings(){
   OPT.sharpen = $('eSharp').checked ? Math.min(1.5, Math.max(0.2, parseFloat($('sharpAmt').value) || 0.5)) : 0;
   OPT.contrast = $('eContrast').checked;
   OPT.gamma = parseFloat($('gamma').value) || 1;
-  OPT.dither = $('xDither').value; OPT.moire = parseFloat($('moire').value) || 0; OPT.autoLevels = $('eAuto').checked; OPT.thumb = $('xThumb').checked;
+  OPT.dither = $('xDither').value; OPT.moire = parseFloat($('moire').value) || 0; OPT.autoLevels = $('eAuto').checked; OPT.thumb = $('xThumb').checked; OPT.wantXth = $('fX').checked; OPT.wantXtg = $('fXtc').checked; OPT.xtcThr = Math.min(220, Math.max(40, parseInt($('xtcThr').value, 10) || 128));
   S.simple = $('modeSimple').checked ? {n: parseInt($('spN').value, 10) === 3 ? 3 : 2, ov: Math.min(0.4, Math.max(0.02, parseFloat($('spOv').value) || 0.15)), whole: $('spWhole').checked} : null;
   S.keepCover = $('keepCover').checked; S.wantXtch = $('fXtch').checked; S.wantXtchL = $('fXtchL').checked; S.wantXtchM = $('fXtchM').checked; S.rot = $('xRot').value;
-  if(!$('fEpub').checked && !$('fCbz').checked && !$('fX').checked) throw new Error('Select at least one file type (XTCH, EPUB or CBZ).');
+  if(!$('fEpub').checked && !$('fCbz').checked && !$('fX').checked && !$('fXtc').checked) throw new Error('Select at least one file type (XTCH, XTC, EPUB or CBZ).');
   S.cw = parseInt($('cw').value); S.chh = parseInt($('ch').value);
   if(!$('oPort').checked && !$('oLand').checked && !$('oMix').checked) throw new Error('Select at least one screen shape (portrait, landscape or mixed).');
   return S;
@@ -1783,21 +1936,23 @@ async function convertFile(file, idx, total, S){
   const meta = (total === 1 && metaFor === file.name + '|' + file.size) ? {...over} : {...srcMeta, ...over};
   meta.title = meta.title || base;
   const chapters = []; let curKey = null, curIdx = -1, totalPanels = 0, skipped = 0;
-  for(let i = 0; i < src.count; i++){
+  const pgOrder = pgSeq(file, src.count);
+  for(let kk = 0; kk < pgOrder.length; kk++){
+    const i = pgOrder[kk];
     const c = src.chapterOf(i);
     if(c.key !== curKey){
       for(const m of modes) await drain(m, true, ratio, q);
       chapters.push({title: c.title}); curKey = c.key; curIdx = chapters.length - 1;
     }
     if(cancelFlag) throw new Error('Cancelled');
-    updateEta((idx + i / src.count) / total);
-    setLabel((total > 1 ? `File ${idx + 1} of ${total}, ` : '') + `page ${i + 1} of ${src.count}`);
-    log(tag + `Page ${i + 1} / ${src.count}  (${c.title})\nPanels so far: ${totalPanels}`);
+    updateEta((idx + kk / pgOrder.length) / total);
+    setLabel((total > 1 ? `File ${idx + 1} of ${total}, ` : '') + `page ${kk + 1} of ${pgOrder.length}`);
+    log(tag + `Page ${kk + 1} / ${pgOrder.length}  (${c.title})\nPanels so far: ${totalPanels}`);
     let pg;
     try{ pg = await src.getPage(i); }
     catch(e){ console.warn('Skipping page', i + 1, e); skipped++; continue; }
     const {g, W, H} = pg;
-    const coverModes = (keepCover && i === 0 && H >= W) ? modes.filter(m => m.land || m.mixed) : [];
+    const coverModes = (keepCover && kk === 0 && H >= W) ? modes.filter(m => m.land || m.mixed) : [];
     for(const m of coverModes) await emitCover(m, {g, w: W, h: H, chap: curIdx, solo: true}, pw, ph, q);
     if(S.simple){
       for(const m of modes){
@@ -1808,7 +1963,7 @@ async function convertFile(file, idx, total, S){
       await new Promise(r => setTimeout(r, 0));
       continue;
     }
-    const ov = edits.get(edKey(file, i));
+    const ov = pgIsWhole(file, i) ? [[0, 0, W, H]] : edits.get(edKey(file, i));
     const boxes = modes.some(m => !coverModes.includes(m)) ? (ov ? ov.map(b => b.slice()) : panelsFor(g, W, H, rtl)) : [];
     for(const b of boxes){
       const w = b[2] - b[0], h = b[3] - b[1], cg = new Uint8Array(w * h);
@@ -1827,13 +1982,15 @@ async function convertFile(file, idx, total, S){
   for(const m of modes){
     const plan = splitPlan(m.screens, maxScr), K = plan.length;
     plan.forEach(([a, b], k) => {
-      const pm = K > 1 ? {...m, screens: m.screens.slice(a, b)} : m, pmeta = K > 1 ? {...meta, title: (meta.title || base) + ` (part ${k + 1} of ${K})`} : meta, sfx = K > 1 ? `-part${k + 1}` : '';
-      if(m.images && $('fEpub').checked) addLink(buildEpub(pm, chapters, pmeta), `${base}-${m.name}${sfx}.epub`);
-      if(m.images && $('fCbz').checked) addLink(buildCbz(pm, pmeta, rtl), `${base}-${m.name}${sfx}.cbz`);
-      if(m.xtch) addLink(buildXtch(pm, chapters, pmeta, rtl), `${base}-${m.name}${sfx}.xtch`);
+      const pad = String(k + 1).padStart(String(K).length, '0'), pm = K > 1 ? {...m, screens: m.screens.slice(a, b)} : m, pmeta = K > 1 ? {...meta, title: (meta.title || base) + ` (part ${k + 1} of ${K})`} : meta, sfx = K > 1 ? `-part${pad}` : '';
+      const put = (blob, ext) => addLink(blob, `${base}-${m.name}${sfx}.${ext}`, base, K > 1 ? `${base}-${m.name}-${ext}` : null);
+      if(m.images && $('fEpub').checked) put(buildEpub(pm, chapters, pmeta), 'epub');
+      if(m.images && $('fCbz').checked) put(buildCbz(pm, pmeta, rtl), 'cbz');
+      if(m.xtch && $('fX').checked) put(buildXtch(pm, chapters, pmeta, rtl, false), 'xtch');
+      if(m.xtch && $('fXtc').checked) put(buildXtch(pm, chapters, pmeta, rtl, true), 'xtc');
     });
   }
-  return {pages: src.count, skipped, panels: totalPanels, screens: Object.fromEntries(modes.map(m => [m.name, m.screens.length])), chapters: chapters.map(c => c.title)};
+  return {pages: pgOrder.length, skipped, panels: totalPanels, screens: Object.fromEntries(modes.map(m => [m.name, m.screens.length])), chapters: chapters.map(c => c.title)};
 }
 // Split a list of screens into parts of about `max` screens, starting a new part at a chapter start when one is near the limit.
 function splitPlan(screens, max){
@@ -1895,8 +2052,10 @@ async function run(){
         try{
           const z = new ZipW(), used = new Set();
           for(const o of outs){
-            let n = o.name, k = 2;
-            while(used.has(n)) n = o.name.replace(/(\.[^.]+)$/, ` (${k++})$1`);
+            const cl = t => String(t || '').replace(/[\\/:*?"<>|]+/g, '_').trim(), lay = $('zipLayout').value;
+            const dir = lay === 'flat' || !o.book ? '' : cl(o.book) + '/' + (lay === 'sets' && o.set ? cl(o.set) + '/' : '');
+            let n = dir + o.name, k = 2;
+            while(used.has(n)) n = (dir + o.name).replace(/(\.[^.]+)$/, ` (${k++})$1`);
             used.add(n); z.add(n, new Uint8Array(await o.blob.arrayBuffer()));
           }
           const d = new Date(), p2 = v => String(v).padStart(2, '0');
@@ -2294,6 +2453,12 @@ function edRender(){
     for(const k of edHKeys()){ const q = edHPos(b, k); ctx.fillRect(q[0] - hs, q[1] - hs, hs * 2, hs * 2); ctx.strokeRect(q[0] - hs, q[1] - hs, hs * 2, hs * 2); }
   }
   const a = ed.act, dr = a && a.t === 'draw' && a.rect;
+  if(a && a.t === 'cut'){
+    ctx.setLineDash([lw * 2, lw * 2]); ctx.lineWidth = lw * 1.5; ctx.strokeStyle = '#be123c'; ctx.beginPath();
+    if(Math.abs(a.x1 - a.x0) >= Math.abs(a.y1 - a.y0)){ const y = (a.y0 + a.y1) / 2; ctx.moveTo(0, y); ctx.lineTo(ed.W, y); }
+    else { const x = (a.x0 + a.x1) / 2; ctx.moveTo(x, 0); ctx.lineTo(x, ed.H); }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
   if(dr){
     ctx.setLineDash([lw * 2, lw * 2]); ctx.lineWidth = lw; ctx.strokeStyle = '#2b2615';
     ctx.strokeRect(dr[0], dr[1], dr[2] - dr[0], dr[3] - dr[1]); ctx.setLineDash([]);
@@ -2305,7 +2470,7 @@ function edRender(){
     const w = tb[2] - tb[0], h = tb[3] - tb[1], f = edFill(w, h);
     $('edInfo').textContent = `${dr ? 'New box' : 'Box ' + (ed.sel + 1)}: ${w} × ${h} px (${(w / h).toFixed(2)} : 1). Shown alone it fills ${f.land}% of a landscape screen and ${f.port}% of a portrait screen.`;
   }else $('edInfo').textContent = $('edLock').value === 'free' ? 'Tip: lock the box shape to your screen so drawn boxes fill it exactly.' : '';
-  cv.style.touchAction = (ed.draw || ed.sel >= 0) ? 'none' : 'pan-y pinch-zoom';
+  cv.style.touchAction = (ed.draw || ed.cut || ed.sel >= 0) ? 'none' : 'pan-y pinch-zoom';
 }
 function edZoomSync(){
   const b = ed.sel >= 0 ? ed.boxes[ed.sel] : null, v = b && b[4] !== undefined ? String(b[4]) : '';
@@ -2334,7 +2499,7 @@ async function edLoadPage(p){
   catch(e){ if(tok === ed.tok){ ed.pageCv = null; $('edStatus').textContent = 'Could not read this page.'; } return; }
   if(tok !== ed.tok) return;
   ed.g = pg.g; ed.W = pg.W; ed.H = pg.H;
-  const ov = edits.get(edKey(ed.file, p));
+  const ov = pgIsWhole(ed.file, p) ? [[0, 0, pg.W, pg.H]] : edits.get(edKey(ed.file, p));
   ed.edited = !!ov; ed.boxes = ov ? ov.map(b => b.slice()) : panelsFor(pg.g, pg.W, pg.H, edRtl());
   ed.sel = -1; ed.act = null; ed.hist = []; ed.note = ''; ed.pageCv = unitCanvas({g: pg.g, w: pg.W, h: pg.H});
   const cv = $('edCv'); cv.width = pg.W; cv.height = pg.H;
@@ -2397,6 +2562,7 @@ edCv.addEventListener('pointerdown', e => {
   if(!ed.pageCv || (e.button !== undefined && e.button > 0)) return;
   const p = edPt(e); e.preventDefault();
   try{ edCv.setPointerCapture(e.pointerId); }catch(_){}
+  if(ed.cut){ ed.note = ''; ed.act = {t: 'cut', x0: p.x, y0: p.y, x1: p.x, y1: p.y}; return; }
   if(ed.draw){ ed.act = {t: 'draw', x0: p.x, y0: p.y, r: edLockRatio(), rect: null}; return; }
   const k = edHandleAt(p, edPx(e.pointerType === 'touch' ? 22 : 11));
   if(k){ ed.act = {t: 'size', k, b0: ed.boxes[ed.sel].slice(), r: edLockRatio(), snap: edSnap(), moved: false}; return; }
@@ -2412,6 +2578,7 @@ edCv.addEventListener('pointermove', e => {
     edCv.style.cursor = ed.draw ? 'crosshair' : k ? CURS[k] : (ed.sel >= 0 && edBoxAt(p) === ed.sel ? 'move' : (edBoxAt(p) >= 0 ? 'pointer' : 'default'));
     return;
   }
+  if(a.t === 'cut'){ a.x1 = p.x; a.y1 = p.y; edRender(); return; }
   if(a.t === 'draw'){
     a.rect = a.r ? lockRect(a.x0, a.y0, p.x, p.y, a.r) : [Math.round(Math.min(a.x0, p.x)), Math.round(Math.min(a.y0, p.y)), Math.round(Math.max(a.x0, p.x)), Math.round(Math.max(a.y0, p.y))];
     edRender();
@@ -2425,8 +2592,38 @@ edCv.addEventListener('pointermove', e => {
     if(nb){ a.moved = true; ed.boxes[ed.sel] = edZKeep(nb, a.b0); edRender(); }
   }
 });
+
+/* ---------- editor: merge boxes, split a box by dragging a line ---------- */
+ed.cut = false;
+function edSetCut(on){
+  ed.cut = on; $('edCut').classList.toggle('on', on);
+  edLbl('edCut', on ? 'Drag a line' : 'Split by line');
+  if(on && ed.draw) edSetDraw(false);
+  edCv.style.cursor = on ? 'crosshair' : 'default'; edRender();
+}
+$('edCut').addEventListener('click', () => edSetCut(!ed.cut));
+$('edMerge').addEventListener('click', () => {
+  const i = ed.sel;
+  if(!ed.pageCv) return;
+  if(i < 0 || i >= ed.boxes.length - 1){ ed.note = ' Select a box that has another box after it, then merge.'; edRender(); return; }
+  edDo(() => { const a = ed.boxes[i], b = ed.boxes[i + 1]; ed.boxes.splice(i, 2, [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])]); ed.sel = i; });
+});
+function edCutApply(a){
+  const dx = a.x1 - a.x0, dy = a.y1 - a.y0, min = edMin();
+  if(Math.hypot(dx, dy) < edPx(8)){ return false; }
+  const horiz = Math.abs(dx) >= Math.abs(dy), mx = (a.x0 + a.x1) / 2, my = (a.y0 + a.y1) / 2;
+  let hit = edBoxAt({x: mx, y: my}); if(hit < 0) hit = edBoxAt({x: a.x0, y: a.y0}); if(hit < 0) hit = ed.sel;
+  if(hit < 0 || !ed.boxes[hit]) return false;
+  const b = ed.boxes[hit], at = Math.round(horiz ? my : mx);
+  const lo = horiz ? b[1] : b[0], hi = horiz ? b[3] : b[2];
+  if(at - lo < min || hi - at < min) return false;
+  const A = horiz ? [b[0], b[1], b[2], at] : [b[0], b[1], at, b[3]], B = horiz ? [b[0], at, b[2], b[3]] : [at, b[1], b[2], b[3]];
+  const pair = (!horiz && edRtl()) ? [B, A] : [A, B];
+  edPush(); ed.boxes.splice(hit, 1, pair[0], pair[1]); ed.sel = hit; edCommit(); return true;
+}
 const edUp = () => {
   const a = ed.act; ed.act = null; if(!a) return;
+  if(a.t === 'cut'){ if(!edCutApply(a)){ ed.note = ' Cut not made: drag a longer line that leaves a piece on each side of the box.'; } edRender(); return; }
   if(a.t === 'draw'){
     const b = a.rect, min = edMin();
     if(b && b[2] - b[0] >= min && b[3] - b[1] >= min){ edPush(); const at = ed.sel >= 0 ? ed.sel + 1 : ed.boxes.length; ed.boxes.splice(at, 0, b); ed.sel = at; edCommit(); }
@@ -2437,7 +2634,7 @@ const edUp = () => {
 edCv.addEventListener('pointerup', edUp);
 edCv.addEventListener('pointercancel', edUp);
 function edSetDraw(on){
-  ed.draw = on; $('edDraw').classList.toggle('on', on);
+  ed.draw = on; $('edDraw').classList.toggle('on', on); if(on && ed.cut) edSetCut(false);
   edLbl('edDraw', on ? 'Drawing: drag' : 'Draw box');
   edCv.style.cursor = on ? 'crosshair' : 'default'; edRender();
 }
@@ -2499,6 +2696,8 @@ document.addEventListener('keydown', e => {
   }
   if(/^[1-9]$/.test(k)){ pick(parseInt(k, 10) - 1); return; }
   if(lk === 'd'){ edSetDraw(!ed.draw); return; }
+  if(lk === 'c'){ edSetCut(!ed.cut); return; }
+  if(lk === 'm'){ $('edMerge').click(); return; }
   if(k === 'Delete' || k === 'Backspace'){ if(ed.sel >= 0){ e.preventDefault(); edDo(() => { ed.boxes.splice(ed.sel, 1); ed.sel = -1; }); } return; }
   if(lk === 'h'){ edSetZoom('2'); return; }
   if(lk === 't'){ edSetZoom('3'); return; }
@@ -2518,21 +2717,602 @@ async function edOpenDlg(flagOnly){
   sel.hidden = files.length < 2;
   ed.flagOnly = flagOnly; ed.jumped = !flagOnly; ed.note = '';
   $('edView').value = $('mMixed').checked || $('fXtchM').checked ? 'mix' : (($('mLand').checked || $('fXtchL').checked || !($('mPort').checked || $('fXtch').checked)) ? 'land' : 'port');
-  edSetDraw(false); edLockLabels();
+  edSetDraw(false); edSetCut(false); edLockLabels();
   $('edDlg').showModal(); edFit(); await edLoadFile(0);
 }
 $('edOpen').addEventListener('click', () => edOpenDlg(false));
 $('edOpenFlag').addEventListener('click', () => edOpenDlg(true));
 
+
+/* ---------- pages: reorder, hide, thumbnails ---------- */
+const pgState = new Map(), pgThumbs = new Map(), pgInfo = new Map();
+const pgSt = (f, n) => {
+  const k = edFileKey(f); let st = pgState.get(k);
+  if(!st){ st = {order: null, hidden: new Set(), whole: new Set()}; pgState.set(k, st); }
+  if(n && (!st.order || st.order.length !== n)) st.order = Array.from({length: n}, (_, i) => i);
+  return st;
+};
+function pgSeq(f, n){
+  const k = edFileKey(f), st = pgState.get(k);
+  if(!st || !st.order || st.order.length !== n) return Array.from({length: n}, (_, i) => i);
+  return st.order.filter(i => !st.hidden.has(i));
+}
+const pgIsWhole = (f, i) => { const st = pgState.get(edFileKey(f)); return !!(st && st.whole.has(i)); };
+const pgp = {file: null, src: null, sel: new Set(), last: -1, q: [], busy: false, tok: 0};
+async function pgSrc(f){
+  const k = edFileKey(f);
+  if(!edSrcs.has(k)) edSrcs.set(k, await openSource(f));
+  return edSrcs.get(k);
+}
+function pgSummary(){
+  let h = 0, r = 0, w = 0;
+  for(const f of Array.from($('file').files)){
+    const st = pgState.get(edFileKey(f)); if(!st) continue;
+    h += st.hidden.size; w += st.whole.size;
+    if(st.order && st.order.some((v, i) => v !== i)) r++;
+  }
+  const parts = []; if(h) parts.push(h + ' hidden'); if(r) parts.push('reordered'); if(w) parts.push(w + ' whole');
+  $('sumPages').textContent = parts.join(', ');
+}
+async function pgFill(){
+  const files = Array.from($('file').files), sel = $('pgFile'), cur = sel.value;
+  sel.textContent = '';
+  files.forEach((f, i) => { const o = document.createElement('option'); o.value = i; o.textContent = f.name; sel.append(o); });
+  if(cur && +cur < files.length) sel.value = cur;
+  $('pgFileRow').hidden = files.length < 2;
+  pgSummary();
+  if(!files.length){ $('pgGrid').textContent = ''; pgp.file = null; $('pgMsg').textContent = ''; return; }
+  if($('secPages').open) await pgRender();
+}
+function pgThumb(f, i, src){
+  const key = edKey(f, i);
+  return new Promise(async res => {
+    if(pgThumbs.has(key)) return res(pgThumbs.get(key));
+    try{
+      const pg = await src.getPage(i), full = unitCanvas({g: pg.g, w: pg.W, h: pg.H});
+      const sc = 120 / Math.max(pg.W, 1), c = document.createElement('canvas');
+      c.width = 120; c.height = Math.max(1, Math.round(pg.H * sc));
+      const x = c.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(full, 0, 0, c.width, c.height);
+      // blank / dark / small statistics
+      let sum = 0, sq = 0, n = 0; const g = pg.g, step = Math.max(1, Math.floor(g.length / 20000));
+      for(let j = 0; j < g.length; j += step){ sum += g[j]; sq += g[j] * g[j]; n++; }
+      const mean = sum / n, sd = Math.sqrt(Math.max(0, sq / n - mean * mean));
+      let tag = '';
+      if(sd < 8 && mean > 150) tag = 'Blank'; else if(sd < 8) tag = 'Dark';
+      else if(pg.W * pg.H < 250000) tag = 'Small';
+      pgInfo.set(key, {tag, mean, sd, W: pg.W, H: pg.H});
+      pgThumbs.set(key, c); res(c);
+    }catch(e){ pgInfo.set(key, {tag: 'Unreadable'}); const c = document.createElement('canvas'); c.width = 120; c.height = 160; pgThumbs.set(key, c); res(c); }
+  });
+}
+function pgDecorate(tile, f, i){
+  tile.querySelectorAll('i').forEach(e => e.remove());
+  const st = pgSt(f), inf = pgInfo.get(edKey(f, i));
+  const lab = []; if(st.whole.has(i)) lab.push('whole'); if(inf && inf.tag) lab.push(inf.tag.toLowerCase());
+  if(lab.length){ const t = document.createElement('i'); t.textContent = lab.join(', '); tile.append(t); }
+  tile.classList.toggle('hid', st.hidden.has(i));
+  tile.classList.toggle('sel', pgp.sel.has(i));
+}
+async function pgRender(){
+  const files = Array.from($('file').files), f = files[parseInt($('pgFile').value, 10) || 0]; if(!f) return;
+  const tok = ++pgp.tok, grid = $('pgGrid');
+  if(pgp.file !== edFileKey(f)){ pgp.sel.clear(); pgp.last = -1; grid.scrollTop = 0; }
+  pgp.file = edFileKey(f);
+  $('pgMsg').textContent = 'Opening file...';
+  try{ pgp.src = await pgSrc(f); }catch(e){ $('pgMsg').textContent = 'Could not open this file: ' + e.message; return; }
+  if(tok !== pgp.tok) return;
+  const st = pgSt(f, pgp.src.count); grid.textContent = '';
+  $('pgMsg').textContent = `${pgp.src.count} pages` + (st.hidden.size ? `, ${st.hidden.size} hidden` : '');
+  const io = new IntersectionObserver(ents => {
+    for(const en of ents) if(en.isIntersecting){ io.unobserve(en.target); pgQueue(f, en.target); }
+  }, {root: grid, rootMargin: '200px'});
+  st.order.forEach((orig, pos) => {
+    const t = document.createElement('div'); t.className = 'pgT'; t.draggable = true; t.dataset.i = orig; t.setAttribute('role', 'listitem');
+    const num = document.createElement('b'); num.textContent = pos + 1;
+    const ph = document.createElement('canvas'); ph.width = 3; ph.height = 4;
+    const cap = document.createElement('span'); cap.textContent = 'p. ' + (orig + 1);
+    t.append(ph, num, cap); grid.append(t); pgDecorate(t, f, orig); io.observe(t);
+    const key = edKey(f, orig); if(pgThumbs.has(key)) pgPaint(t, f, orig);
+    t.addEventListener('click', e => pgClick(e, orig, pos));
+    t.addEventListener('dragstart', e => {
+      if(!pgp.sel.has(orig)){ pgp.sel = new Set([orig]); pgRefreshSel(f); }
+      e.dataTransfer.setData('text/plain', String(orig)); e.dataTransfer.effectAllowed = 'move';
+    });
+    t.addEventListener('dragover', e => { e.preventDefault(); t.classList.add('over'); });
+    t.addEventListener('dragleave', () => t.classList.remove('over'));
+    t.addEventListener('drop', e => { e.preventDefault(); t.classList.remove('over'); pgMoveTo(f, pos); });
+  });
+  pgSummary();
+}
+function pgPaint(t, f, i){
+  const c = pgThumbs.get(edKey(f, i)); if(!c) return;
+  const old = t.querySelector('canvas'); const n = document.createElement('canvas');
+  n.width = c.width; n.height = c.height; n.getContext('2d').drawImage(c, 0, 0);
+  n.style.aspectRatio = c.width + '/' + c.height; old.replaceWith(n); pgDecorate(t, f, i);
+}
+function pgQueue(f, tile){
+  pgp.q.push([f, tile]); if(!pgp.busy) pgPump();
+}
+async function pgPump(){
+  pgp.busy = true;
+  while(pgp.q.length){
+    const [f, tile] = pgp.q.shift();
+    if(!tile.isConnected || edFileKey(f) !== pgp.file) continue;
+    const i = +tile.dataset.i; await pgThumb(f, i, pgp.src);
+    if(tile.isConnected) pgPaint(tile, f, i);
+    await new Promise(r => setTimeout(r, 0));
+  }
+  pgp.busy = false;
+}
+function pgRefreshSel(f){
+  $('pgGrid').querySelectorAll('.pgT').forEach(t => pgDecorate(t, f, +t.dataset.i));
+}
+function pgCur(){ return Array.from($('file').files)[parseInt($('pgFile').value, 10) || 0]; }
+function pgClick(e, orig, pos){
+  const f = pgCur(), st = pgSt(f);
+  if(e.shiftKey && pgp.last >= 0){
+    const a = Math.min(pgp.last, pos), b = Math.max(pgp.last, pos);
+    for(let k = a; k <= b; k++) pgp.sel.add(st.order[k]);
+  }else{
+    if(pgp.sel.has(orig)) pgp.sel.delete(orig); else pgp.sel.add(orig);
+    pgp.last = pos;
+  }
+  pgRefreshSel(f);
+}
+function pgMoveTo(f, pos){
+  const st = pgSt(f), moving = st.order.filter(i => pgp.sel.has(i));
+  if(!moving.length) return;
+  const before = st.order.slice(0, pos).filter(i => !pgp.sel.has(i));
+  const after = st.order.slice(pos).filter(i => !pgp.sel.has(i));
+  // dropping onto a tile puts the moved pages in front of that tile
+  st.order = before.concat(moving, after); pgRender();
+}
+function pgShift(dir){
+  const f = pgCur(); if(!f || !pgp.sel.size) return; const st = pgSt(f), o = st.order;
+  if(dir < 0){ for(let k = 1; k < o.length; k++) if(pgp.sel.has(o[k]) && !pgp.sel.has(o[k - 1])){ [o[k - 1], o[k]] = [o[k], o[k - 1]]; } }
+  else { for(let k = o.length - 2; k >= 0; k--) if(pgp.sel.has(o[k]) && !pgp.sel.has(o[k + 1])){ [o[k + 1], o[k]] = [o[k], o[k + 1]]; } }
+  pgRender();
+}
+$('pgEarlier').onclick = () => pgShift(-1);
+$('pgLater').onclick = () => pgShift(1);
+$('pgHide').onclick = () => {
+  const f = pgCur(); if(!f || !pgp.sel.size) return; const st = pgSt(f);
+  const allHidden = [...pgp.sel].every(i => st.hidden.has(i));
+  for(const i of pgp.sel) allHidden ? st.hidden.delete(i) : st.hidden.add(i);
+  pgRender();
+};
+$('pgWhole').onclick = () => {
+  const f = pgCur(); if(!f || !pgp.sel.size) return; const st = pgSt(f);
+  const all = [...pgp.sel].every(i => st.whole.has(i));
+  for(const i of pgp.sel) all ? st.whole.delete(i) : st.whole.add(i);
+  pgRender();
+};
+$('pgCover').onclick = () => {
+  const f = pgCur(); if(!f || !pgp.sel.size) return; const st = pgSt(f), moving = st.order.filter(i => pgp.sel.has(i));
+  st.order = moving.concat(st.order.filter(i => !pgp.sel.has(i))); for(const i of moving) st.hidden.delete(i); pgRender();
+};
+$('pgSelNone').onclick = () => { pgp.sel.clear(); const f = pgCur(); if(f) pgRefreshSel(f); };
+$('pgReset').onclick = () => { const f = pgCur(); if(!f) return; pgState.delete(edFileKey(f)); pgp.sel.clear(); pgRender(); };
+$('pgSelBad').onclick = () => {
+  const f = pgCur(); if(!f) return; pgp.sel.clear();
+  const st = pgSt(f);
+  for(const i of st.order){ const inf = pgInfo.get(edKey(f, i)); if(inf && inf.tag) pgp.sel.add(i); }
+  $('pgMsg').textContent = pgp.sel.size ? `${pgp.sel.size} blank or odd pages selected. Use Hide / show to leave them out.` : 'No blank or odd pages found among the pages checked so far. Try "Find blank pages" first.';
+  pgRefreshSel(f);
+};
+$('pgScan').onclick = async () => {
+  const f = pgCur(); if(!f) return; const tok = ++pgp.tok;
+  const src = await pgSrc(f); pgp.src = src; const n = src.count;
+  for(let i = 0; i < n; i++){
+    if(tok !== pgp.tok && false) return;
+    $('pgMsg').textContent = `Checking page ${i + 1} of ${n}...`;
+    await pgThumb(f, i, src);
+    if(i % 8 === 7) await new Promise(r => setTimeout(r, 0));
+  }
+  let bad = 0; for(let i = 0; i < n; i++){ const inf = pgInfo.get(edKey(f, i)); if(inf && inf.tag) bad++; }
+  pgp.tok++; await pgRender();
+  $('pgMsg').textContent = bad ? `${bad} blank or odd page${bad > 1 ? 's' : ''} found. Press "Select blank / odd", then "Hide / show".` : 'No blank or odd pages found.';
+};
+$('pgEdit').onclick = async () => {
+  const f = pgCur(); if(!f || pgp.sel.size < 1) { $('pgMsg').textContent = 'Select a page first.'; return; }
+  const idx = parseInt($('pgFile').value, 10) || 0, page = Math.min(...pgp.sel);
+  await openEditorAt(idx, page);
+};
+$('pgFile').addEventListener('change', pgRender);
+$('secPages').addEventListener('toggle', () => { if($('secPages').open) pgRender(); });
+$('file').addEventListener('change', pgFill);
+
+
+/* ---------- device: remember last, profiles, direction test, size estimate ---------- */
+const LASTK = 'bcc_last';
+function lastSave(){
+  try{ localStorage.setItem(LASTK, JSON.stringify({preset: $('preset').selectedIndex, cw: $('cw').value, ch: $('ch').value, dir: document.querySelector('input[name=dir]:checked').value})); }catch(e){}
+}
+function lastLoad(){
+  try{
+    const o = JSON.parse(localStorage.getItem(LASTK) || 'null'); if(!o) return;
+    if(Number.isInteger(o.preset) && o.preset >= 0 && o.preset < $('preset').options.length) $('preset').selectedIndex = o.preset;
+    if(o.cw) $('cw').value = o.cw; if(o.ch) $('ch').value = o.ch;
+    const r = document.querySelector(`input[name=dir][value=${o.dir === 'ltr' ? 'ltr' : 'rtl'}]`); if(r) r.checked = true;
+  }catch(e){}
+}
+lastLoad();
+$('preset').addEventListener('change', lastSave); $('cw').addEventListener('input', lastSave); $('ch').addEventListener('input', lastSave);
+document.querySelectorAll('input[name=dir]').forEach(r => r.addEventListener('change', lastSave));
+
+const PROFILES = {
+  x4a: {size: '480,800', xtch: true, xtc: false, split: '200'},
+  x4b: {size: '480,800', xtch: false, xtc: true, split: '300'},
+  x3a: {size: '528,792', xtch: true, xtc: false, split: '150'},
+  x3b: {size: '528,792', xtch: false, xtc: true, split: '300'}
+};
+function setChk(id, v){ const e = $(id); if(e.checked !== v){ e.checked = v; e.dispatchEvent(new Event('change', {bubbles: true})); } }
+$('devProf').addEventListener('change', () => {
+  const pr = PROFILES[$('devProf').value]; if(!pr) return;
+  const pre = $('preset'); pre.value = pr.size; const [w, h] = pr.size.split(','); $('cw').value = w; $('ch').value = h;
+  setChk('oPort', true); setChk('oLand', false); setChk('oMix', false);
+  setChk('fX', pr.xtch); setChk('fXtc', pr.xtc); setChk('fEpub', false); setChk('fCbz', false);
+  $('splitParts').value = pr.split; $('splitParts').dispatchEvent(new Event('change', {bubbles: true}));
+  pre.dispatchEvent(new Event('change', {bubbles: true})); updateSummaries(); lastSave();
+});
+
+/* direction test */
+function dirDraw(cv, g, W, H, boxes){
+  const sc = Math.min(1, 320 / W); cv.width = Math.round(W * sc); cv.height = Math.round(H * sc);
+  const x = cv.getContext('2d'); x.drawImage(unitCanvas({g, w: W, h: H}), 0, 0, cv.width, cv.height);
+  x.lineWidth = 2; x.font = 'bold ' + Math.max(14, Math.round(cv.width / 12)) + 'px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  boxes.forEach((b, i) => {
+    const X = b[0] * sc, Y = b[1] * sc, w = (b[2] - b[0]) * sc, h = (b[3] - b[1]) * sc;
+    x.strokeStyle = '#be123c'; x.strokeRect(X + 1, Y + 1, w - 2, h - 2);
+    const r = Math.max(11, Math.min(w, h) / 6), cx = X + w / 2, cy = Y + h / 2;
+    x.fillStyle = 'rgba(190,18,60,.9)'; x.beginPath(); x.arc(cx, cy, r, 0, 7); x.fill();
+    x.fillStyle = '#fff'; x.fillText(String(i + 1), cx, cy + 1);
+  });
+}
+function dirDemo(){
+  const W = 300, H = 400, g = new Uint8Array(W * H).fill(255);
+  const rect = (x0, y0, x1, y1) => { for(let y = y0; y < y1; y++) for(let x = x0; x < x1; x++) g[y * W + x] = (x < x0 + 3 || x >= x1 - 3 || y < y0 + 3 || y >= y1 - 3) ? 0 : 215; };
+  rect(10, 10, 290, 150); rect(10, 160, 140, 390); rect(150, 160, 290, 270); rect(150, 280, 290, 390);
+  return {g, W, H};
+}
+$('dirTest').addEventListener('click', async () => {
+  let pgd = null, note = 'No file added yet, so this uses a made-up page.';
+  const f = Array.from($('file').files)[0];
+  if(f){
+    try{
+      const src = await pgSrc(f), seq = pgSeq(f, src.count);
+      for(let k = 0; k < Math.min(seq.length, 20); k++){
+        const pg = await src.getPage(seq[k]);
+        if(pg.H < pg.W) continue;
+        const bx = panelsFor(pg.g, pg.W, pg.H, true);
+        if(bx.length >= 3){ pgd = pg; note = `Using page ${seq[k] + 1} of ${f.name}.`; break; }
+      }
+      if(!pgd) note = 'No page with several panels found near the start, so this uses a made-up page.';
+    }catch(e){ note = 'Could not read the file, so this uses a made-up page.'; }
+  }
+  const d = pgd ? {g: pgd.g, W: pgd.W, H: pgd.H} : dirDemo();
+  $('dirNote').textContent = note;
+  dirDraw($('dirR'), d.g, d.W, d.H, panelsFor(d.g, d.W, d.H, true));
+  dirDraw($('dirL'), d.g, d.W, d.H, panelsFor(d.g, d.W, d.H, false));
+  $('dirDlg').showModal();
+});
+$('dirUseR').onclick = () => { const r = document.querySelector('input[name=dir][value=rtl]'); r.checked = true; r.dispatchEvent(new Event('change', {bubbles: true})); $('dirDlg').close(); };
+$('dirUseL').onclick = () => { const r = document.querySelector('input[name=dir][value=ltr]'); r.checked = true; r.dispatchEvent(new Event('change', {bubbles: true})); $('dirDlg').close(); };
+$('dirClose').onclick = () => $('dirDlg').close();
+
+/* size and screen estimate: samples pages, runs the real box detection and packing */
+function estScreens(g, W, H, boxes, o){
+  const mode = edMode(o === 'land'), mix = o === 'mix', n = boxes.length;
+  const asp = Math.min(3, Math.max(0.6, parseFloat($('mixAsp').value) || 1.15));
+  const us = boxes.map((b, i) => {
+    const u = {...edCropUnit(g, W, b), solo: n === 1 || b[4] === 2 || b[4] === 3, zoom: b[4], idx: i, b};
+    u.o = mix ? (u.w / u.h >= asp ? 'land' : 'port') : o; return u;
+  });
+  const q = us.slice(); let total = 0, land = 0;
+  while(q.length){
+    const oo = q[0].o, m = edMode(oo === 'land'); let run = 0; while(run < q.length && q[run].o === oo) run++;
+    const rq = q.splice(0, run);
+    while(rq.length){
+      let done = false;
+      for(const k of [3, 2]){
+        if(k > m.maxGroup) continue;
+        const grp = rq.slice(0, k);
+        if(grp.length === k && !grp.some(u => u.solo) && tryGroup(grp, m.W, m.H, m.land, m.ratio)){ total++; if(oo === 'land') land++; rq.splice(0, k); done = true; break; }
+      }
+      if(!done){ const u = rq.shift(); total += 1 + soloParts(m, u).length; if(oo === 'land') land++; }
+    }
+  }
+  return {total, land};
+}
+const mb = n => n >= 1048576 ? (n / 1048576).toFixed(n >= 10485760 ? 0 : 1) + ' MB' : Math.round(n / 1024) + ' KB';
+$('estBtn').addEventListener('click', async () => {
+  const box = $('estBox'), files = Array.from($('file').files); box.hidden = false;
+  if(!files.length){ box.textContent = 'Add a file first.'; return; }
+  syncOutputs(); const o = outNames();
+  if(!o.n){ box.textContent = 'Pick at least one screen shape and file type.'; return; }
+  const cw = parseInt($('cw').value, 10) || 480, ch = parseInt($('ch').value, 10) || 800, lo = Math.min(cw, ch), hi = Math.max(cw, ch);
+  const maxScr = parseInt($('splitParts').value, 10) || 0, rtl = edRtl(), lines = [];
+  const shapes = [['portrait', 'port', $('oPort').checked], ['landscape', 'land', $('oLand').checked], ['mixed', 'mix', $('oMix').checked]].filter(x => x[2]);
+  const types = [['xtch', $('fX').checked], ['xtc', $('fXtc').checked], ['epub', $('fEpub').checked], ['cbz', $('fCbz').checked]].filter(x => x[1]).map(x => x[0]);
+  let warn = false;
+  for(let fi = 0; fi < files.length; fi++){
+    const f = files[fi]; box.textContent = `Sampling ${f.name}...`;
+    let src; try{ src = await pgSrc(f); }catch(e){ lines.push(`${f.name}: could not be read.`); continue; }
+    const seq = pgSeq(f, src.count), n = seq.length, take = Math.min(n, 12), per = {};
+    for(const sh of shapes) per[sh[1]] = {t: 0, l: 0};
+    let got = 0;
+    for(let j = 0; j < take; j++){
+      const i = seq[Math.floor((j + 0.5) * n / take)];
+      let pg; try{ pg = await src.getPage(i); }catch(e){ continue; }
+      const bx = pgIsWhole(f, i) ? [[0, 0, pg.W, pg.H]] : (edits.get(edKey(f, i)) || panelsFor(pg.g, pg.W, pg.H, rtl)); got++;
+      for(const sh of shapes){ const r = estScreens(pg.g, pg.W, pg.H, bx, sh[1]); per[sh[1]].t += r.total; per[sh[1]].l += r.land; }
+      await new Promise(r => setTimeout(r, 0));
+    }
+    if(!got){ lines.push(`${f.name}: no readable pages.`); continue; }
+    lines.push(`<b>${f.name.replace(/</g, '&lt;')}</b>: ${n} pages`);
+    for(const sh of shapes){
+      const scr = Math.round(per[sh[1]].t / got * n), W = sh[1] === 'land' ? hi : lo, H = sh[1] === 'land' ? lo : hi;
+      const parts = maxScr && scr > maxScr ? Math.ceil(scr / maxScr) : 1, per1 = parts > 1 ? Math.ceil(scr / parts) : scr;
+      const bits = types.map(t => {
+        const one = t === 'xtch' ? 22 + 2 * W * Math.ceil(H / 8) : t === 'xtc' ? 22 + Math.ceil(W / 8) * H : Math.round(W * H * 0.2);
+        const whole = one * scr, big = one * per1;
+        const risky = (t === 'xtch' || t === 'xtc') && big > 40 * 1048576 && (lo <= 528);
+        if(risky) warn = true;
+        return `${t.toUpperCase()} ${mb(whole)}${parts > 1 ? ` in ${parts} parts (about ${mb(big)} each)` : ''}${risky ? ' <b class="warn">likely too big</b>' : ''}`;
+      });
+      lines.push(`&nbsp;&nbsp;${sh[0]}: about ${scr} screens, ${bits.join('; ')}`);
+    }
+  }
+  box.innerHTML = '<p>' + lines.join('<br>') + '</p><p><small>Estimated from a sample of pages; EPUB and CBZ sizes are rough. ' + (warn ? '<b class="warn">One or more files may run out of memory on an X3 or X4 (a 60 to 70 MB file did on an X3). Use "Split into parts" with a smaller number, or XTC black and white.</b>' : 'On an X3 or X4, keep each file under about 40 MB.') + '</small></p>';
+});
+$('file').addEventListener('change', () => { $('estBox').hidden = true; });
+
+
+/* ---------- review grid: all pages with detected boxes, fix only the bad ones ---------- */
+const rv = {tiles: [], tok: 0, idx: 0, auto: new Map()};
+async function openEditorAt(idx, page){
+  await edOpenDlg(false);
+  if(idx > 0){ $('edFile').value = idx; await edLoadFile(idx); }
+  await edLoadPage(page);
+}
+function rvBoxes(f, i, pg){
+  const key = edKey(f, i);
+  if(pgIsWhole(f, i)) return [[0, 0, pg.W, pg.H]];
+  const ov = edits.get(key); if(ov) return ov;
+  const ck = key + (edRtl() ? 'r' : 'l');
+  if(!rv.auto.has(ck)) rv.auto.set(ck, panelsFor(pg.g, pg.W, pg.H, edRtl()));
+  return rv.auto.get(ck);
+}
+function rvDraw(t, pg, boxes){
+  const sc = 150 / pg.W, cv = t.querySelector('canvas'); cv.width = 150; cv.height = Math.max(1, Math.round(pg.H * sc));
+  const x = cv.getContext('2d'); x.drawImage(unitCanvas({g: pg.g, w: pg.W, h: pg.H}), 0, 0, cv.width, cv.height);
+  x.lineWidth = 1.5; x.font = 'bold 11px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  boxes.forEach((b, i) => {
+    x.strokeStyle = '#be123c'; x.strokeRect(b[0] * sc + 1, b[1] * sc + 1, (b[2] - b[0]) * sc - 2, (b[3] - b[1]) * sc - 2);
+    const cx = (b[0] + b[2]) / 2 * sc, cy = (b[1] + b[3]) / 2 * sc;
+    x.fillStyle = 'rgba(190,18,60,.85)'; x.beginPath(); x.arc(cx, cy, 8, 0, 7); x.fill(); x.fillStyle = '#fff'; x.fillText(String(i + 1), cx, cy + 1);
+  });
+}
+function rvLabel(t, f, i, boxes, m){
+  const rs = edReasons(m, edSens()), edt = edits.has(edKey(f, i)) || pgIsWhole(f, i);
+  t.classList.toggle('flag', rs.length > 0 && !edt); t.classList.toggle('edt', edt);
+  t.dataset.flag = rs.length ? '1' : ''; t.dataset.edt = edt ? '1' : '';
+  const b = t.querySelector('.rvB'); b.textContent = '';
+  const l = document.createElement('span'); l.innerHTML = `p.${i + 1}: ${boxes.length} box${boxes.length === 1 ? '' : 'es'}` + (rs.length ? ` <span class="tg">${rs.join(', ')}</span>` : '') + (edt ? ' (edited)' : '');
+  const w = document.createElement('button'); w.type = 'button'; w.className = 'btn2 rvW'; w.textContent = pgIsWhole(f, i) ? 'Unlock' : 'Whole'; w.title = 'Keep this page as one box';
+  w.onclick = async e => {
+    e.stopPropagation(); const st = pgSt(f); if(st.whole.has(i)) st.whole.delete(i); else st.whole.add(i);
+    pgSummary(); await rvDo(f, i, t, true);
+  };
+  b.append(l, w); rvApply();
+}
+async function rvDo(f, i, t, force){
+  const src = await pgSrc(f); let pg;
+  try{ pg = await src.getPage(i); }catch(e){ t.querySelector('.rvB').textContent = 'p.' + (i + 1) + ': unreadable'; return; }
+  const boxes = rvBoxes(f, i, pg), m = edMetrics(pg.g, pg.W, pg.H, boxes);
+  edScanOf(f, src).m.set(i, m); rvDraw(t, pg, boxes); rvLabel(t, f, i, boxes, m);
+}
+function rvApply(){
+  const v = document.querySelector('input[name=rvf]:checked').value;
+  let flagged = 0, edited = 0, shown = 0;
+  for(const t of $('rvGrid').children){
+    if(t.dataset.flag) flagged++; if(t.dataset.edt) edited++;
+    const ok = v === 'all' || (v === 'flag' && t.dataset.flag && !t.dataset.edt) || (v === 'edited' && t.dataset.edt);
+    t.hidden = !ok; if(ok) shown++;
+  }
+  rv.counts = {flagged, edited, shown};
+}
+async function rvOpen(){
+  const files = Array.from($('file').files); if(!files.length) return;
+  const sel = $('rvFile'); sel.textContent = '';
+  files.forEach((f, k) => { const o = document.createElement('option'); o.value = k; o.textContent = f.name; sel.append(o); });
+  sel.hidden = files.length < 2; $('rvDlg').showModal(); await rvBuild();
+}
+async function rvBuild(){
+  const files = Array.from($('file').files), idx = parseInt($('rvFile').value, 10) || 0, f = files[idx], tok = ++rv.tok, grid = $('rvGrid');
+  grid.textContent = ''; rv.idx = idx; if(!f) return;
+  $('rvMsg').textContent = 'Opening file...';
+  let src; try{ src = await pgSrc(f); }catch(e){ $('rvMsg').textContent = 'Could not open this file.'; return; }
+  if(tok !== rv.tok) return;
+  const seq = pgSeq(f, src.count);
+  for(const i of seq){
+    const t = document.createElement('div'); t.className = 'rvT'; t.dataset.i = i;
+    const c = document.createElement('canvas'); c.width = 150; c.height = 200; const b = document.createElement('div'); b.className = 'rvB'; b.textContent = 'p.' + (i + 1);
+    t.append(c, b); grid.append(t);
+    t.addEventListener('click', async () => { $('rvDlg').close(); await openEditorAt(idx, i); });
+  }
+  for(let k = 0; k < seq.length; k++){
+    if(tok !== rv.tok || !$('rvDlg').open) return;
+    await rvDo(f, seq[k], grid.children[k]);
+    if(k % 4 === 3 || k === seq.length - 1){
+      rvApply(); $('rvMsg').textContent = `Checked ${k + 1} of ${seq.length}: ${rv.counts.flagged} flagged, ${rv.counts.edited} edited.`;
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+  rvApply(); $('rvMsg').textContent = `${seq.length} pages: ${rv.counts.flagged} flagged, ${rv.counts.edited} edited.`;
+}
+$('rvOpen').addEventListener('click', rvOpen);
+$('rvClose').addEventListener('click', () => { rv.tok++; $('rvDlg').close(); });
+$('rvDlg').addEventListener('close', () => { rv.tok++; });
+$('rvFile').addEventListener('change', rvBuild);
+document.querySelectorAll('input[name=rvf]').forEach(r => r.addEventListener('change', rvApply));
+
+
+/* ---------- quality preview, auto cutoff ---------- */
+const qp = {active: false, cache: new Map(), tok: 0};
+function qpScreen(){
+  const cw = parseInt($('cw').value, 10) || 480, ch = parseInt($('ch').value, 10) || 800;
+  return {W: Math.min(cw, ch), H: Math.max(cw, ch)};
+}
+function qpFit(pg, W, H){   // whole page fitted to the screen, white around it
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d', {willReadFrequently: true}); x.fillStyle = '#fff'; x.fillRect(0, 0, W, H);
+  const sc = Math.min(W / pg.W, H / pg.H), w = Math.max(1, Math.round(pg.W * sc)), h = Math.max(1, Math.round(pg.H * sc));
+  x.imageSmoothingQuality = 'high'; x.drawImage(unitCanvas({g: pg.g, w: pg.W, h: pg.H}), Math.round((W - w) / 2), Math.round((H - h) / 2), w, h);
+  return c;
+}
+function qpOpt(){ try{ readSettings(); }catch(e){} }
+function qpDecode(bytes, W, H, kind){   // turn the real XTG / XTH page bytes back into a picture
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d'), id = x.createImageData(W, H), d = id.data;
+  if(kind === 'xtc'){
+    const bpr = (W + 7) >> 3;
+    for(let y = 0; y < H; y++) for(let px = 0; px < W; px++){ const v = (bytes[22 + y * bpr + (px >> 3)] >> (7 - (px & 7))) & 1 ? 255 : 0; const j = (y * W + px) * 4; d[j] = d[j + 1] = d[j + 2] = v; d[j + 3] = 255; }
+  }else{
+    const bpc = Math.ceil(H / 8), plane = W * bpc, LV = [0, 85, 170, 255];
+    for(let col = 0; col < W; col++){
+      const px = W - 1 - col;
+      for(let y = 0; y < H; y++){
+        const gi = y >> 3, k = y & 7, b1 = (bytes[22 + col * bpc + gi] >> (7 - k)) & 1, b2 = (bytes[22 + plane + col * bpc + gi] >> (7 - k)) & 1;
+        const v = LV[XTH_CODE.indexOf((b1 << 1) | b2)]; const j = (y * W + px) * 4; d[j] = d[j + 1] = d[j + 2] = v; d[j + 3] = 255;
+      }
+    }
+  }
+  x.putImageData(id, 0, 0); return c;
+}
+async function qpPageData(){
+  const f = Array.from($('file').files)[0]; if(!f) return null;
+  const src = await pgSrc(f), seq = pgSeq(f, src.count); if(!seq.length) return null;
+  const n = Math.min(seq.length, Math.max(1, parseInt($('qpPage').value, 10) || 1)), i = seq[n - 1], key = edKey(f, i);
+  if(!qp.cache.has(key)){ qp.cache.set(key, await src.getPage(i)); if(qp.cache.size > 6) qp.cache.delete(qp.cache.keys().next().value); }
+  $('qpPage').max = seq.length; return qp.cache.get(key);
+}
+async function qpRender(){
+  const tok = ++qp.tok, box = $('qpMsg');
+  let pg; try{ pg = await qpPageData(); }catch(e){ box.textContent = 'Could not read that page.'; return; }
+  if(!pg){ box.textContent = 'Add a file first.'; return; }
+  if(tok !== qp.tok) return;
+  const {W, H} = qpScreen(); qpOpt();
+  const orig = qpFit(pg, W, H), proc = document.createElement('canvas'); proc.width = W; proc.height = H;
+  const px = proc.getContext('2d', {willReadFrequently: true}); px.drawImage(orig, 0, 0); postProcess(px, W, H);
+  let out = proc, cap = 'After (grey)'; const v = $('qpView').value;
+  if(v === 'xtc'){ out = qpDecode(xtgPage(px, W, H, OPT.dither, null, OPT.xtcThr), W, H, 'xtc'); cap = `After (XTC, cutoff ${OPT.xtcThr})`; }
+  else if(v === 'xtch'){ out = qpDecode(xthPage(px, W, H, OPT.dither, null), W, H, 'xtch'); cap = 'After (XTCH, 4 greys)'; }
+  for(const [id, c] of [['qpA', orig], ['qpB', out]]){ const t = $(id); t.width = W; t.height = H; t.getContext('2d').drawImage(c, 0, 0); }
+  $('qpCap').textContent = cap; $('qpImgs').hidden = false; qp.active = true;
+  box.textContent = `Page ${$('qpPage').value || 1}, ${W}×${H}. Moiré reduction and panel enlargement are not shown here.`;
+}
+$('qpRun').addEventListener('click', qpRender);
+let qpT = 0;
+const QP_IDS = new Set(['eSharp', 'sharpAmt', 'eContrast', 'gamma', 'eAuto', 'xDither', 'xtcThr', 'cw', 'ch', 'qpView', 'qpPage', 'preset']);
+['input', 'change'].forEach(ev => document.addEventListener(ev, e => {
+  if(!qp.active || !e.target || !QP_IDS.has(e.target.id)) return;
+  clearTimeout(qpT); qpT = setTimeout(qpRender, 350);
+}));
+$('file').addEventListener('change', () => { qp.cache.clear(); qp.active = false; $('qpImgs').hidden = true; });
+$('xtcAuto').addEventListener('click', async () => {
+  const f = Array.from($('file').files)[0]; if(!f){ $('qpMsg').textContent = 'Add a file first.'; return; }
+  $('xtcAuto').disabled = true;
+  try{
+    const src = await pgSrc(f), seq = pgSeq(f, src.count), take = Math.min(seq.length, 8), {W, H} = qpScreen(); qpOpt();
+    const hist = new Float64Array(256);
+    for(let j = 0; j < take; j++){
+      const pg = await src.getPage(seq[Math.floor((j + 0.5) * seq.length / take)]);
+      const c = qpFit(pg, W, H), x = c.getContext('2d', {willReadFrequently: true}); postProcess(x, W, H);
+      const d = x.getImageData(0, 0, W, H).data; for(let i = 0; i < d.length; i += 4) hist[d[i]]++;
+    }
+    let tot = 0, sum = 0; for(let v = 0; v < 256; v++){ tot += hist[v]; sum += v * hist[v]; }
+    let wB = 0, sB = 0, best = 0, thr = 128;
+    for(let v = 0; v < 256; v++){
+      wB += hist[v]; if(!wB) continue; const wF = tot - wB; if(!wF) break;
+      sB += v * hist[v]; const mB = sB / wB, mF = (sum - sB) / wF, bt = wB * wF * (mB - mF) * (mB - mF);
+      if(bt > best){ best = bt; thr = v; }
+    }
+    thr = Math.min(220, Math.max(40, Math.round(thr / 4) * 4));
+    $('xtcThr').value = thr; $('xtcThr').dispatchEvent(new Event('input', {bubbles: true})); $('xtcThr').dispatchEvent(new Event('change', {bubbles: true}));
+    $('qpMsg').textContent = `Cutoff set to ${thr}, picked from ${take} sample pages. Use the preview (XTC view) to check it.`;
+  }catch(e){ $('qpMsg').textContent = 'Could not pick a cutoff: ' + e.message; }
+  $('xtcAuto').disabled = false;
+});
+
+/* ---------- metadata from the file name, cover picker ---------- */
+function parseName(fn){
+  let t = fn.replace(/\.[^.]+$/, '').replace(/_/g, ' '), author = '', year = '', vol = '';
+  const lead = t.match(/^\s*\[([^\]]+)\]\s*/); if(lead){ author = lead[1].trim(); t = t.slice(lead[0].length); }
+  t = t.replace(/\((\d{4})\)/g, (m, y) => { year = year || y; return ' '; });
+  t = t.replace(/\[[^\]]*\]/g, ' ').replace(/\((?:digital|c2c|f|webrip|web|scan(?:ned)?|lq|hq|[^)]*(?:scans?|digital|group|fansub)[^)]*)\)/gi, ' ');
+  t = t.replace(/\s+/g, ' ').trim();
+  let m = t.match(/[\s\-,:]*(?:vol(?:ume)?\.?|v|book|tome|#|no\.?|ch(?:apter)?\.?)\s*0*(\d+(?:\.\d+)?)\s*$/i) || t.match(/[\s\-,:]+0*(\d{1,3})\s*$/);
+  if(m){ vol = m[1]; t = t.slice(0, m.index).replace(/[\s\-,:]+$/, ''); }
+  const dash = t.match(/^(.+?)\s+-\s+(.+)$/);
+  if(dash && !author && dash[1].length < 40){ author = dash[1].trim(); t = dash[2].trim(); }
+  return {title: t.trim(), author, year, vol};
+}
+$('metaName').addEventListener('click', () => {
+  const files = Array.from($('file').files), msg = $('metaMsg');
+  if(!files.length){ msg.textContent = 'Add a file first.'; return; }
+  if(files.length === 1){
+    const r = parseName(files[0].name);
+    if(r.title) $('mTitle').value = r.title; if(r.vol) $('mVol').value = r.vol;
+    if(r.author && !$('mAuthor').value) $('mAuthor').value = r.author; if(r.year && !$('mYear').value) $('mYear').value = r.year;
+    if(r.vol && !$('mSeries').value) $('mSeries').value = r.title;
+    msg.textContent = `Title "${r.title}"${r.vol ? ', volume ' + r.vol : ''}${r.author ? ', author ' + r.author : ''}. Check and edit if needed.`;
+  }else{
+    files.forEach((f, i) => { const r = parseName(f.name), t = $('bmT' + i), v = $('bmV' + i); if(t && r.title) t.value = r.title; if(v && r.vol) v.value = r.vol; });
+    msg.textContent = 'Titles and volumes filled for each file from their names. Check and edit if needed.';
+  }
+  $('mTitle').dispatchEvent(new Event('input', {bubbles: true}));
+});
+$('metaCover').addEventListener('click', () => {
+  $('secPages').open = true; $('secPages').scrollIntoView({behavior: 'smooth', block: 'start'});
+  $('metaMsg').textContent = 'In Pages, select the page you want and press "Make cover". It moves to the front.';
+});
+
+/* ---------- presets: export and import ---------- */
+$('cfgExport').addEventListener('click', () => {
+  const all = cfgGet(), n = Object.keys(all).length;
+  if(!n){ $('cfgMsg').textContent = 'No saved presets to export.'; return; }
+  const blob = new Blob([JSON.stringify({banana_presets: 1, presets: all}, null, 1)], {type: 'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'banana-presets.json'; document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000); $('cfgMsg').textContent = `Exported ${n} preset${n > 1 ? 's' : ''}.`;
+});
+$('cfgImport').addEventListener('click', () => $('cfgFile').click());
+$('cfgFile').addEventListener('change', async () => {
+  const f = $('cfgFile').files[0]; $('cfgFile').value = ''; if(!f) return;
+  try{
+    const j = JSON.parse(await f.text()), inc = j && j.banana_presets && j.presets && typeof j.presets === 'object' ? j.presets : null;
+    if(!inc) throw new Error('not a presets file');
+    const all = cfgGet(); let n = 0;
+    for(const name of Object.keys(inc)){
+      const o = inc[name]; if(!o || typeof o !== 'object' || Array.isArray(o)) continue;
+      const clean = {}; for(const k of Object.keys(o)){ const v = o[k]; if(typeof v === 'string' || typeof v === 'boolean' || typeof v === 'number') clean[k] = v; }
+      all[String(name).slice(0, 60)] = clean; n++;
+    }
+    if(!n) throw new Error('no presets inside');
+    $('cfgMsg').textContent = cfgPut(all) ? `Imported ${n} preset${n > 1 ? 's' : ''}. Same names were replaced.` : 'Could not save (browser storage is blocked).';
+    cfgRefresh();
+  }catch(e){ $('cfgMsg').textContent = 'Could not import: ' + e.message + '.'; }
+});
+
 /* ---------- help: info buttons and the How to use dialog ---------- */
 const HELP = {
   'Files': '<p>Add the comics to convert: CBZ, ZIP or PDF. Drop files (or folders) on the box, or click it to browse. Adding more keeps what is already listed; the &times; removes one file. Each file gets its own outputs.</p>',
-  'Device and reading': '<p><b>Reading direction</b>: right-to-left for manga, left-to-right for western comics. It sets the panel order and which half comes first when a panel is split. <b>Screen preset</b> picks your reader&rsquo;s resolution; choose Custom to type your own size. Larger screens make larger files.</p>',
-  'Output': '<p>Pick which <b>screen shapes</b> and which <b>file types</b> to make; you get one file for every combination (listed under the buttons).</p><p><b>Split into parts</b> makes several smaller files for each shape and type (part 1, part 2 ...), about the number of screens you choose, starting at a chapter where possible. Use it if your e-reader runs out of memory on big files.</p><ul><li><b>Portrait / Landscape</b>: all pages on that screen shape.</li><li><b>Mixed</b>: one file where wide panels use landscape screens and tall panels use portrait screens. Turn the device when the page orientation changes. Long panels and dense pages still show whole first, then zoomed.</li><li><b>XTCH</b>: 4-level gray format for Xteink devices (landscape pages are stored sideways; options for rotation, dither and a cover thumbnail appear when it is ticked). <b>EPUB</b> and <b>CBZ</b> work in most readers.</li></ul><p>With <i>keep the cover</i> on, the first page is shown whole on a portrait page in landscape and mixed output.</p>',
-  'Panels': '<p><b>Conversion mode:</b> <i>Smart panels</i> finds and reorders panels (everything below). <i>Simple page split</i> skips all of that: each page is just cut into 2 or 3 overlapping parts, a quick conversion like other basic converters.</p><p>Smart mode: check how each page is split into panels and fix mistakes, then control how panels become screens.</p><ul><li><b>Preview and fix panels</b>: go through all pages. <b>Review flagged pages only</b>: jump straight to tall, big or possibly grouped boxes.</li><li><b>Zoom and splitting</b>: the only two settings that show a screen whole and then enlarged pieces of it. <i>Long panels</i> become two halves; <i>dense page zoom</i> cuts crowded screens into tiles. Each adds pages. The overlap setting applies to both.</li><li><b>Packing</b>: max panels per screen (1 = never combine) and the minimum scale kept when packing.</li></ul><p>Press <b>How to use</b> at the top for the full panel editor guide.</p>',
-  'Image quality': '<p>Tweaks that help e-ink screens: sharpening for enlarged panels, e-ink contrast, darker midtones, moir&eacute; reduction for screentone, auto-levels for faded scans, and JPEG quality (higher is sharper and larger).</p>',
-  'Metadata': '<p>Title, author, series and so on, filled in from the file when it has them. Blank fields keep each file&rsquo;s own values. With several files, each gets its own Title and Volume row.</p>',
-  'Saved presets': '<p>Save all settings under a name (for example "X4 portrait") and load them in one tap. Files, metadata and panel edits are not included. Presets live in this browser only.</p>',
+  'Pages': '<p>Look at every page before converting. <b>Drag</b> pages to reorder them, select pages and use <b>Hide / show</b> to leave out ads and credits, <b>Make cover</b> to move a page to the front, <b>Keep whole</b> to always output a page as one box, and <b>Edit panels</b> to open it in the panel editor. <b>Find blank pages</b> checks every page for blank, dark or tiny scans. Hidden pages stay out of every output; nothing in your original file changes.</p>',
+  'Device and reading': '<p><b>Test direction on my page</b> shows your first panelled page numbered both ways so you can see which direction is right. The last device and direction you used are remembered in this browser.</p><p><b>Reading direction</b>: right-to-left for manga, left-to-right for western comics. It sets the panel order and which half comes first when a panel is split. <b>Screen preset</b> picks your reader&rsquo;s resolution; choose Custom to type your own size. Larger screens make larger files.</p>',
+  'Output': '<p><b>Device profile</b> sets screen size, portrait, file type and a safe split size for the X3 or X4 in one choice. <b>Estimate size and screens</b> samples your pages and shows the expected screens and file size, with a warning when a file is likely too big for the device.</p><p>Pick which <b>screen shapes</b> and which <b>file types</b> to make; you get one file for every combination (listed under the buttons).</p><p><b>Split into parts</b> makes several smaller files for each shape and type (part 1, part 2 ...), about the number of screens you choose, starting at a chapter where possible. Use it if your e-reader runs out of memory on big files.</p><ul><li><b>Portrait / Landscape</b>: all pages on that screen shape.</li><li><b>Mixed</b>: one file where wide panels use landscape screens and tall panels use portrait screens. Turn the device when the page orientation changes. Long panels and dense pages still show whole first, then zoomed.</li><li><b>XTCH</b>: 4-level gray format for Xteink devices (landscape pages are stored sideways; options for rotation, dither and a cover thumbnail appear when it is ticked). <b>EPUB</b> and <b>CBZ</b> work in most readers.</li></ul><p>With <i>keep the cover</i> on, the first page is shown whole on a portrait page in landscape and mixed output.</p>',
+  'Panels': '<p><b>Review all pages (grid)</b> shows every page with its detected boxes; click a page to fix it in the editor, or press Whole to keep it as one box. In the editor, <b>Merge next</b> and <b>Split by line</b> combine or cut boxes.</p><p><b>Conversion mode:</b> <i>Smart panels</i> finds and reorders panels (everything below). <i>Simple page split</i> skips all of that: each page is just cut into 2 or 3 overlapping parts, a quick conversion like other basic converters.</p><p>Smart mode: check how each page is split into panels and fix mistakes, then control how panels become screens.</p><ul><li><b>Preview and fix panels</b>: go through all pages. <b>Review flagged pages only</b>: jump straight to tall, big or possibly grouped boxes.</li><li><b>Zoom and splitting</b>: the only two settings that show a screen whole and then enlarged pieces of it. <i>Long panels</i> become two halves; <i>dense page zoom</i> cuts crowded screens into tiles. Each adds pages. The overlap setting applies to both.</li><li><b>Packing</b>: max panels per screen (1 = never combine) and the minimum scale kept when packing.</li></ul><p>Press <b>How to use</b> at the top for the full panel editor guide.</p>',
+  'Image quality': '<p>The <b>Preview before / after</b> at the top shows one page with your sharpen, contrast and dither settings, as grey, XTCH or XTC, and updates as you change them. <b>Auto</b> next to the XTC cutoff picks a cutoff from your pages.</p><p>Tweaks that help e-ink screens: sharpening for enlarged panels, e-ink contrast, darker midtones, moir&eacute; reduction for screentone, auto-levels for faded scans, and JPEG quality (higher is sharper and larger).</p>',
+  'Metadata': '<p><b>Fill from file name</b> guesses title, volume, author and year from the name (check the result). <b>Choose cover page</b> takes you to Pages, where <b>Make cover</b> moves a page to the front.</p><p>Title, author, series and so on, filled in from the file when it has them. Blank fields keep each file&rsquo;s own values. With several files, each gets its own Title and Volume row.</p>',
+  'Saved presets': '<p><b>Export</b> saves your presets to a file and <b>Import</b> loads them back, so they can move between browsers and devices.</p><p>Save all settings under a name (for example "X4 portrait") and load them in one tap. Files, metadata and panel edits are not included. Presets live in this browser only.</p>',
   'Selected box': '<p>Choose how the selected box is zoomed: <b>Auto</b> follows your zoom settings, <b>Off</b> shows it as it is, <b>Halves</b> or <b>Thirds</b> show it whole and then as enlarged overlapping parts. Keys: A, O, H, T.</p>',
   'Page': '<p>Move between pages with the arrow keys or the buttons. The bar shows how many flagged pages you have reviewed; with no scan it shows how many pages you have viewed.</p>',
   'Edit boxes': '<p>Click a box to select it, drag to move, drag handles to resize. <b>Draw box</b> adds a new one after the selected box. <b>Earlier / Later</b> change reading order. <b>Whole page</b> uses one box for the page. <b>Re-detect</b> resets this page. <b>Sort by reading order</b> re-sorts the boxes after you move or draw some. <b>Black gutters</b> re-detects it treating black gaps as the gutters. Delete every box to skip the page.</p>',
@@ -2570,21 +3350,22 @@ document.querySelectorAll('#helpDlg [data-tab]').forEach(b => b.addEventListener
 document.querySelectorAll('[data-help]').forEach(b => b.addEventListener('click', () => { helpTab(b.dataset.help); $('helpDlg').showModal(); }));
 $('helpClose').addEventListener('click', () => $('helpDlg').close());
 
+
 /* ---------- compact UI: output matrix, live summaries, remembered open sections ---------- */
 function syncOutputs(){
   if($('modeSimple').checked) $('oMix').checked = false;
-  const img = $('fEpub').checked || $('fCbz').checked, x = $('fX').checked;
+  const img = $('fEpub').checked || $('fCbz').checked, x = $('fX').checked || $('fXtc').checked;
   $('mPort').checked = $('oPort').checked && img; $('mLand').checked = $('oLand').checked && img; $('mMixed').checked = $('oMix').checked && img;
   $('fXtch').checked = $('oPort').checked && x; $('fXtchL').checked = $('oLand').checked && x; $('fXtchM').checked = $('oMix').checked && x;
   const simple = $('modeSimple').checked; $('simpleOpts').hidden = !simple; $('smartOpts').hidden = simple;
   if(simple) $('oMix').checked = false; $('oMix').disabled = simple; $('oMix').closest('.opt').style.opacity = simple ? .4 : '';
-  $('mixRow').hidden = !$('oMix').checked; $('xtchOpts').hidden = !x;
+  $('mixRow').hidden = !$('oMix').checked; $('xtchOpts').hidden = !x; $('xtcOpt').hidden = !$('fXtc').checked;
   $('xRot').closest('.f').hidden = !($('oLand').checked || $('oMix').checked);
   $('xRot').closest('.f').nextElementSibling.hidden = $('xRot').closest('.f').hidden;
 }
 function outNames(){
   const sh = [['oPort', 'portrait'], ['oLand', 'landscape'], ['oMix', 'mixed']].filter(x => $(x[0]).checked).map(x => x[1]);
-  const ft = [['fX', 'xtch'], ['fEpub', 'epub'], ['fCbz', 'cbz']].filter(x => $(x[0]).checked).map(x => x[1]);
+  const ft = [['fX', 'xtch'], ['fXtc', 'xtc'], ['fEpub', 'epub'], ['fCbz', 'cbz']].filter(x => $(x[0]).checked).map(x => x[1]);
   return {sh, ft, n: sh.length * ft.length};
 }
 function splitNoteUpdate(){
@@ -2605,7 +3386,7 @@ function updateSummaries(){
   $('sumQuality').textContent = [$('eSharp').checked ? 'sharpen' : '', $('eContrast').checked ? 'contrast' : '', $('eAuto').checked ? 'auto-levels' : '', 'JPEG ' + $('qual').value].filter(Boolean).join(' · ');
   $('sumMeta').textContent = ($('mTitle').value || '').slice(0, 30);
   $('sumPresets').textContent = Object.keys(cfgGet()).length ? Object.keys(cfgGet()).length + ' saved' : '';
-  $('edOpen').disabled = !nf || $('modeSimple').checked; $('edOpenFlag').disabled = $('edOpen').disabled;
+  $('edOpen').disabled = !nf || $('modeSimple').checked; $('edOpenFlag').disabled = $('edOpen').disabled; $('rvOpen').disabled = $('edOpen').disabled;
   $('runSummary').textContent = nf && o.n ? `${nf} file${nf > 1 ? 's' : ''} → ${o.n * nf} output${o.n * nf > 1 ? 's' : ''}` : '';
 }
 document.addEventListener('input', updateSummaries); document.addEventListener('change', updateSummaries);
@@ -2623,7 +3404,7 @@ document.addEventListener('input', updateSummaries); document.addEventListener('
 const _edCT = edCountText; edCountText = function(){ _edCT(); updateSummaries(); };
 
 /* ---------- saved presets ---------- */
-const CFG_SKIP = new Set(['file', 'pick', 'consent', 'cfgName', 'cfgList', 'edPage', 'edFile', 'edLock', 'edSens', 'edShow', 'edView', 'edMode', 'edMin', 'edMax', 'edKGroup', 'edKBig', 'edKTall', 'edKBusy', 'edKOv', 'mTitle', 'mAuthor', 'mSeries', 'mVol', 'mPub', 'mYear', 'mLang', 'mDesc']);
+const CFG_SKIP = new Set(['qpPage', 'qpView', 'cfgFile', 'rvFile', 'devProf', 'pgFile', 'file', 'pick', 'consent', 'cfgName', 'cfgList', 'edPage', 'edFile', 'edLock', 'edSens', 'edShow', 'edView', 'edMode', 'edMin', 'edMax', 'edKGroup', 'edKBig', 'edKTall', 'edKBusy', 'edKOv', 'mTitle', 'mAuthor', 'mSeries', 'mVol', 'mPub', 'mYear', 'mLang', 'mDesc']);
 const cfgControls = () => Array.from(document.querySelectorAll('input[id],select[id],textarea[id]')).filter(e => e.type !== 'file' && !CFG_SKIP.has(e.id) && !/^bm[TV]\d+$/.test(e.id));
 const cfgGet = () => { try{ return JSON.parse(localStorage.getItem('bcc_presets') || '{}'); }catch(e){ return {}; } };
 const cfgPut = o => { try{ localStorage.setItem('bcc_presets', JSON.stringify(o)); return true; }catch(e){ return false; } };
